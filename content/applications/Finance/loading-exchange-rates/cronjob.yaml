@@ -1,0 +1,19 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: loading-exchange-rates.finance
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      containers:
+      - name: loading-exchange-rates.finance
+        image: ${image}
+        env:
+        - { name: TZ, value: Europe/Chisinau }
+        volumeMounts:
+        - { name: certs, mountPath: /certs, readOnly: true }
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+      restartPolicy: OnFailure
