@@ -1,0 +1,20 @@
+https://gnupg.org/faq/whats-new-in-2.1.html#ecc
+
+gpg --expert --full-gen-key
+gpg --armor --export demius.md@gmail.com
+
+9 - ECC and ECC (elliptic curves)
+6 - BrainPool P-256
+0 - key does not expire
+
+pw: Alessandro&Safina
+
+gpg: key 8AD73CFB051954B8 marked as ultimately trusted
+gpg: directory '/home/acc-server-admin/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/home/acc-server-admin/.gnupg/openpgp-revocs.d/BC7D866AB80C8BA81617DD8C8AD73CFB051954B8.rev'
+public and secret key created and signed.
+
+pub   brainpoolP256r1 2019-03-05 [SC]
+      BC7D866AB80C8BA81617DD8C8AD73CFB051954B8
+uid                      Demius Academius (main) <demius.md@gmail.com>
+sub   brainpoolP256r1 2019-03-05 [E]
