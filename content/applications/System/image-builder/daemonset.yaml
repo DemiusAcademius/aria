@@ -1,28 +1,30 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
-  name: e-payment.api.billing
+  name: image-builder
+  namespace: aria
   labels:
-    app: e-payment.api.billing
+    app: image-builder
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: e-payment.api.billing
+      app: image-builder
   template:
     metadata:
       labels:
-        app: e-payment.api.billing
+        app: image-builder
       spec:
+        nodeSelector:
+            node-role.kubernetes.io/master: ""
+        tolerations:
+          - key: node-role.kubernetes.io/master
+            effect: NoSchedule
+        terminationGracePeriodSeconds: 5
         containers:
-        - name: e-payment.api.billing
-          image: ${image}
+        - name: image-builder
+          image: localhost:32000/image-builder.aria:0.0.1
+          imagePullPolicy: ifNotPresent
           ports:
           - containerPort: 443
           env:
           - { name: TZ, value: Europe/Chisinau }
-          volumeMounts:
-          - { name: certs, mountPath: /certs, readOnly: true }
-        volumes:
-        - name: certs
-          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
