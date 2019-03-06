@@ -5,11 +5,11 @@
 
 ## Parameters for VM
 
-Param        | Value
--------------|------------
+Param        | Value       | Comments
+-------------|-------------|---
 **Vm-Name**  | kube-server
 **Disk**     | 400Gb
-**Ram**      | 16Gb
+**Ram**      | 16Gb        | 16384Mib
 **Bridge**   | bridge0
 
 ## Installer parameters
@@ -32,6 +32,10 @@ Param           | Value
 **Username**    | acc-server-admin
 **Password**    | shwsa3nn
 
+## Snap setup
+
+    microk8s
+
 ## After install
 
     sudo apt update & sudo apt upgrade -y
@@ -40,15 +44,18 @@ Param           | Value
     sudo timedatectl set-timezone Europe/Chisinau
     reboot
 
-## Install kubernetes
+## Install kubernetes (skip if already installed)
 
     sudo snap install microk8s --classic
+
+## Simplify use of kubectl and docker
+
     sudo snap alias microk8s.kubectl kubectl
     sudo snap alias microk8s.docker docker
 
-## Enable storage & registry
+## Enable registry (with storage) and dashboard (with grafana,influxdb and heapster)
 
-    microk8s.enable storage registry dashboard
+    microk8s.enable registry dashboard
     
 > See https://dzone.com/articles/kubernetes-metallb-bare-metal-loadbalancer
 
