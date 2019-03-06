@@ -21,7 +21,7 @@ Param              | Value
 **Gateway**        | 10.10.0.254
 **Name servers**   | 10.10.0.250, 10.10.0.252
 **Search domains** | apa-canal.md
-**Disk usage**     | Use entire disk, LVM, XFS
+**Disk usage**     | Use entire disk, XFS
 
 ## Profile setup
 
@@ -44,7 +44,9 @@ Param           | Value
     sudo timedatectl set-timezone Europe/Chisinau
     reboot
 
-## Install kubernetes (skip if already installed)
+## Install kubernetes
+
+>  skip if already installed
 
     sudo snap install microk8s --classic
 
@@ -53,12 +55,24 @@ Param           | Value
     sudo snap alias microk8s.kubectl kubectl
     sudo snap alias microk8s.docker docker
 
-## Enable registry (with storage) and dashboard (with grafana,influxdb and heapster)
+## Enable registry and dashboard
 
     microk8s.enable registry dashboard
+
+>  registry automatically enables storage
+
+>  dashboard automatically enables grafana,influxdb and heapster
+
+## Troubleshooting
+
+> if push to local-registry not working, comment localhost ip6 in /etc/hosts
+
+## Additional material
     
 > See https://dzone.com/articles/kubernetes-metallb-bare-metal-loadbalancer
 
 > See https://github.com/google/metallb
 
 > See https://metallb.universe.tf/
+
+> See https://help.ubuntu.com/lts/serverguide/advanced-installation.html.en

@@ -22,7 +22,7 @@ spec:
         terminationGracePeriodSeconds: 5
         containers:
         - name: image-builder
-          image: localhost:32000/image-builder.aria:0.0.1
+          image: 127.0.0.1:32000/image-builder.aria:0.0.1
           imagePullPolicy: ifNotPresent
           ports:
           - containerPort: 443
