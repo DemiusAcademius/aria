@@ -1,7 +1,7 @@
 content: "@HOME/Desktop/ARIA/content"
 servers:
-  sia-server:
-    uri: 10.10.112.11
+  aria-server:
+    uri: 10.10.112.27
     user: acc-server-admin
     password: shwsa3nn
     description: applications server based on Kubernetes

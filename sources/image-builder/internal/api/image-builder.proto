@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+// generate for GO: protoc -I internal/api internal/api/image-builder.proto --go_out=plugins=grpc:internal/api
+
+package api;
+
+service ImageBuilder {
+  rpc Init(GitRepo) returns (Response) {}
+  rpc Pull(Empty) returns (Response) {}
+  rpc BuildProject(Project) returns (BuildResponse) {}
+  rpc BuildNamespace(Namespace) returns (stream BuildResponse) {}
+  rpc BuildAll(Empty) returns (stream BuildResponse) {}
+}
+
+message Empty {}
+
+message GitRepo {
+  enum ProjectType {
+    DOTNET = 0;
+    JAVA   = 1;
+    NODEJS = 2;
+  }
+  ProjectType projectType = 1;
+  string      provider    = 2;
+  string      repo        = 3;
+  string      username    = 4;
+  string      password    = 5;
+}
+
+message Namespace {
+  string namespace = 1;
+}
+
+message Project {
+  string namespace = 1;
+  string project   = 2;
+}
+
+enum ResponseCode {
+  OK = 0;
+}
+
+message Response {
+  ResponseCode code       = 1;
+  string errorDesctiption = 2;
+}
+
+message BuildResponse {
+  Project project         = 1;
+  ResponseCode code       = 2;
+  string errorDesctiption = 3;
+}

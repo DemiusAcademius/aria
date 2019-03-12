@@ -46,22 +46,63 @@ Param           | Value
 
 ## Install kubernetes
 
->  skip if already installed
+skip if already installed
 
     sudo snap install microk8s --classic
 
-## Simplify use of kubectl and docker
+beta version of k8s:
+
+    sudo snap install microk8s --channel=1.14/beta --classic
+
+**Simplify use of kubectl and docker**
 
     sudo snap alias microk8s.kubectl kubectl
     sudo snap alias microk8s.docker docker
 
-## Enable registry and dashboard
+**Enable registry and dashboard**
 
     microk8s.enable registry dashboard
 
->  registry automatically enables storage
+registry automatically enables storage
 
->  dashboard automatically enables grafana,influxdb and heapster
+dashboard automatically enables grafana,influxdb and heapster
+
+## Deploying official Dashboard UI
+
+**Create Dashboard Account**
+
+    sudo kubectl create -f manifests/dashboard-user.yaml
+
+**Find Bearer Token for login**
+
+    sudo kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep dashboard-user | awk '{print $1}')
+
+**Access to Dashboard UI with NodePort**
+
+    sudo KUBE_EDITOR="nano" kubectl -n kube-system edit service kubernetes-dashboard
+
+edit manifest file for NodePort = 30931
+<pre>
+    apiVersion: v1
+    ...
+    name: kubernetes-dashboard
+    ...
+    spec:
+    ...
+    ports:
+    - port: 443
+        protocol: TCP
+    targetPort: 8443
+    <b>nodePort: 30931</b>
+    selector:
+        k8s-app: kubernetes-dashboard
+    sessionAffinity: None
+    type: ClusterIP <b><<< NodePort</b>
+    status:
+    ...
+</pre>
+
+> Access Dashboard via Firefox (certs) at https://10.10.112.11:30931
 
 ## Troubleshooting
 

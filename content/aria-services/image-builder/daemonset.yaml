@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: image-builder
+  namespace: aria
+  labels:
+    app: image-builder
+spec:
+  selector:
+    matchLabels:
+      app: image-builder
+  template:
+    metadata:
+      labels:
+        app: image-builder
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: image-builder
+        image: 10.10.112.27:5000/image-builder.aria:0.0.6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 443
+        env:
+        - { name: TZ, value: Europe/Chisinau }
+        - { name: DOCKER_HOST, value: "unix:///var/run/docker.sock" }
+        - { name: REGISTRY_URL, value: "10.10.112.27" }
+        volumeMounts:
+        - { name: docker-socket , mountPath: /var/run/docker.sock }
+        - { name: registry-auth , mountPath: /auth, readOnly: true }
+        - { name: certs , mountPath: /certs, readOnly: true }
+      dnsPolicy: Default
+      volumes:
+      - name: docker-socket
+        hostPath: { path: /var/run/docker.sock, type: Socket }
+      - name: registry-auth
+        hostPath: { path: /home/acc-server-admin/auth, type: Directory }
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+      imagePullSecrets:
+      - name: regcred
