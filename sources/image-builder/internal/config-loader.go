@@ -15,7 +15,7 @@ type ServiceConfig struct {
 	// GitPassword    string `env:"GIT_PASSWORD" default:"UwTUAeRhcpyJ9JG"`
 	CertFile       string `env:"CERT_FILE" default:"/certs/acc.io.crt"`
 	KeyFile        string `env:"KEY_FILE" default:"/certs/acc.io.key"`
-	ServerPort     int    `env:"PORT" default:"9999"`
+	ServerPort     string `env:"PORT" default:"443"`
 }
 
 /* Non-exported instance to avoid accidental overwrite */

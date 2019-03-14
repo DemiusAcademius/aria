@@ -1,5 +1,7 @@
 package main
 
+// https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
+
 import (
 	"fmt"
 	"log"
@@ -19,7 +21,7 @@ import (
 func main() {
 	config := internal.LoadConfiguration()
 
-	listener, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", config.ServerPort))
+	listener, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", config.ServerPort))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -38,9 +40,11 @@ func main() {
 	grpcServer := grpc.NewServer(opts...)
 	api.RegisterImageBuilderServer(grpcServer, internal.NewServer())
 
-	log.Printf("Starting image-builder at `localhost:%d`\n", config.ServerPort)
+	log.Printf("Starting image-builder at `localhost:%s`\n", config.ServerPort)
 
-	grpcServer.Serve(listener)
+	if err := grpcServer.Serve(listener); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 
 	/*
 	_, err := git.PlainClone(config.GitLocalFolder, false, &git.CloneOptions{

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: envoy-proxy
+  namespace: aria
+  labels:
+    app: envoy-proxy
+spec:
+  selector:
+    matchLabels:
+      app: envoy-proxy
+  template:
+    metadata:
+      labels:
+        app: envoy-proxy
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: envoy-proxy
+        image: 10.10.112.27:5000/envoy-proxy.aria:0.0.5
+        ports:
+        - { name: http, containerPort: 80, hostPort: 80 }
+        - { name: https, containerPort: 443, hostPort: 443 }
+        imagePullPolicy: IfNotPresent
+        env:
+        - { name: TZ, value: Europe/Chisinau }
+        volumeMounts:
+        - { name: certs, mountPath: /certs, readOnly: true }
+      dnsPolicy: Default
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+      imagePullSecrets:
+      - name: regcred
