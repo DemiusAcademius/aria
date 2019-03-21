@@ -31,8 +31,8 @@ spec:
         securityContext:
           privileged: true        
         env:
-        - { name: REGISTRY_HTTP_TLS_CERTIFICATE, value: /certs/acc.io.crt }
-        - { name: REGISTRY_HTTP_TLS_KEY, value: /certs/acc.io.key }
+        - { name: REGISTRY_HTTP_TLS_CERTIFICATE, value: /certs/acc.io/acc.io.crt }
+        - { name: REGISTRY_HTTP_TLS_KEY, value: /certs/acc.io/acc.io.key }
         - { name: REGISTRY_AUTH, value: htpasswd }
         - { name: REGISTRY_AUTH_HTPASSWD_PATH, value: /auth/htpasswd }
         - { name: REGISTRY_AUTH_HTPASSWD_REALM, value: Registry Realm }
