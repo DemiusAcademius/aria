@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: envoy-proxy
-  namespace: aria
+  namespace: kube-system
   labels:
     app: envoy-proxy
 spec:
@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: envoy-proxy
-        image: 10.10.112.27:5000/envoy-proxy.aria:0.0.5
+        image: 10.10.112.27:5000/envoy-proxy.aria:0.0.8
         ports:
         - { name: http, containerPort: 80, hostPort: 80 }
         - { name: https, containerPort: 443, hostPort: 443 }

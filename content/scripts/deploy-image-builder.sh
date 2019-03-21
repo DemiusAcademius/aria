@@ -1,6 +1,6 @@
 #!/bin/bash
-VERSION=0.0.9
-kubectl delete daemonset image-builder -n aria
+VERSION=0.0.11
+kubectl delete daemonset image-builder -n kube-system
 
 docker build -t image-builder.aria:$VERSION aria-services/image-builder
 docker tag image-builder.aria:$VERSION 10.10.112.27:5000/image-builder.aria:$VERSION

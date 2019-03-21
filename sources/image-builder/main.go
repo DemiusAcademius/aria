@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
-	// "os"
+	"os"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -14,8 +14,8 @@ import (
 	"demius/image-builder/internal"
 	"demius/image-builder/internal/api"
 
-	// git "gopkg.in/src-d/go-git.v4"
-	// "gopkg.in/src-d/go-git.v4/plumbing/transport/http"
+	git "gopkg.in/src-d/go-git.v4"
+	"gopkg.in/src-d/go-git.v4/plumbing/transport/http"
 )
 
 func main() {
@@ -30,6 +30,22 @@ func main() {
 	if config.CertFile == "" || config.KeyFile == "" {
 		log.Fatalln("No key & crt files are specified in the environment")
 	}
+
+	//
+	
+	_, err = git.PlainClone(config.GitLocalFolder, false, &git.CloneOptions{
+		Auth: &http.BasicAuth{
+			Username: "DemiusAcademius",
+			Password: "UwTUAeRhcpyJ9JG",
+		},		
+		URL:      "https://bitbucket.org/accsi/golang-monorepo",
+		Progress: os.Stdout,
+	})
+	if err != nil {
+		log.Fatalf("Failed clone repository: %s", err)
+	}
+
+	//
 
 	creds, err := credentials.NewServerTLSFromFile(config.CertFile, config.KeyFile)
 	if err != nil {
@@ -46,17 +62,4 @@ func main() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 
-	/*
-	_, err := git.PlainClone(config.GitLocalFolder, false, &git.CloneOptions{
-		Auth: &http.BasicAuth{
-			Username: config.GitUsername,
-			Password: config.GitPassword,
-		},		
-		URL:      config.GitProvider + config.GitRepo,
-		Progress: os.Stdout,
-	})
-	if err != nil {
-		log.Fatalf("Failed clone repository: %s", err)
-	}
-	*/
 }

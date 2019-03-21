@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: nginx
-  namespace: aria
+  namespace: kube-system
   labels:
     app: nginx
 spec:
@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: nginx
-        image: 10.10.112.27:5000/nginx.aria:0.0.1
+        image: 10.10.112.27:5000/nginx.aria:0.0.2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 443

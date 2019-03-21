@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: image-builder
-  namespace: aria
+  namespace: kube-system
   labels:
     app: image-builder
 spec:
@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: image-builder
-        image: 10.10.112.27:5000/image-builder.aria:0.0.9
+        image: 10.10.112.27:5000/image-builder.aria:0.0.11
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 443
