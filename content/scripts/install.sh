@@ -5,6 +5,7 @@ RED='\033[1;31m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}INSTALL KUBERNETES SINGLE-NODE${NC}"
+echo ""
 
 # timezone to Chisinau
 timedatectl set-timezone Europe/Chisinau
@@ -29,11 +30,13 @@ cp certs/acc.md/*.crt /usr/local/share/ca-certificates
 update-ca-certificates
 
 # install docker
+echo ""
 echo -e "${BLUE}INSTALL DOCKER${NC}"
 apt-get install docker.io -y
 systemctl enable docker.service
 
 # instal kubernetes utilities and services
+echo ""
 echo -e "${BLUE}INSTALL K8S PACKAGES${NC}"
 apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
@@ -44,6 +47,7 @@ systemctl restart kubelet
 sysctl net.bridge.bridge-nf-call-iptables=1
 
 # run installation
+echo ""
 echo -e "${BLUE}INSTALL KUBERNETES${NC}"
 kubeadm init --pod-network-cidr=10.244.0.0/16
 

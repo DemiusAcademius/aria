@@ -5,12 +5,14 @@ RED='\033[1;31m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}POST INSTALL${NC}"
+echo ""
 
 # master isolation for single node installation
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
 # create dashboard, dashboard user && namespaces
 # SEE: https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+echo ""
 echo -e "${BLUE}Install Dashboard${NC}"
 kubectl create secret generic kubernetes-dashboard-certs --from-file=$HOME/certs/dashboard -n kube-system
 kubectl create -f manifests/dashboard-service.yaml
@@ -18,6 +20,7 @@ kubectl create -f manifests/dashboard-user.yaml
 kubectl create -f manifests/namespaces.yaml
 
 # install docker registry
+echo ""
 echo -e "${BLUE}Install registry${NC}"
 mkdir registry-data
 docker run --entrypoint htpasswd registry:2 -Bbn kube-registry-user yf-ujhirt-cbltk-rjhjkm > ./auth/htpasswd
