@@ -18,6 +18,7 @@ kubectl create secret generic kubernetes-dashboard-certs --from-file=$HOME/certs
 kubectl create -f manifests/dashboard-service.yaml
 kubectl create -f manifests/dashboard-user.yaml
 kubectl create -f manifests/namespaces.yaml
+kubectl create -f manifests/aria-services-account.yaml
 
 # install docker registry
 echo ""
