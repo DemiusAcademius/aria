@@ -1,0 +1,84 @@
+static_resources:
+  listeners:
+  - address:
+      socket_address: { address: 0.0.0.0, port_value: 80 }
+    filter_chains:
+    - filters:
+      - name: envoy.http_connection_manager
+        config:
+          codec_type: auto
+          stat_prefix: ingress_http
+          access_log:
+            - name: envoy.file_access_log
+              config:
+                path: "/dev/stdout"
+          route_config:
+            virtual_hosts:
+            - name: backend
+              domains: [ "*" ]
+              routes:
+              - match: { prefix: "/" }
+                redirect: { path_redirect: "/", https_redirect: true }
+          http_filters:
+          - name: envoy.router
+            config: {}
+  - address:
+      socket_address: { address: 0.0.0.0, port_value: 443 }
+    filter_chains:
+    - filters:
+      - name: envoy.http_connection_manager
+        config:
+          codec_type: auto
+          stat_prefix: ingress_https
+          access_log:
+            - name: envoy.file_access_log
+              config:
+                path: "/dev/stdout"
+          route_config:
+            virtual_hosts:
+            - name: backend
+              domains: [ "*" ]
+              routes:
+              - match: { prefix: "/aria/image-builder" }
+                route: { cluster: image-builder.kube-system, prefix_rewrite: ""}
+              - match: { prefix: "/media/" }
+                route: { cluster: nginx.kube-system, prefix_rewrite: "/media/"}
+              - match: { prefix: "/" }
+                route: { cluster: nginx.kube-system, prefix_rewrite: "/"}
+          http_filters:
+          - name: envoy.router
+            config: {}     
+      tls_context:
+        common_tls_context:
+          tls_certificates:
+            - certificate_chain: { filename: /certs/acc.io/acc.io.crt }
+              private_key: { filename: /certs/acc.io/acc.io.key }
+  clusters:
+  - name: nginx.kube-system
+    connect_timeout: { seconds: 5 }
+    type: logical_dns
+    lb_policy: ROUND_ROBIN
+    tls_context:
+      common_tls_context:
+        tls_certificates:
+          - certificate_chain: { filename: /certs/acc.io/acc.io.crt }
+            private_key: { filename: /certs/acc.io/acc.io.key }
+    hosts:
+    - socket_address: { address: nginx.kube-system, port_value: 443 }
+
+  - name: image-builder.kube-system
+    connect_timeout: { seconds: 20 }
+    type: logical_dns
+    lb_policy: ROUND_ROBIN
+    tls_context:
+      common_tls_context:
+        tls_certificates:
+          - certificate_chain: { filename: /certs/acc.io/acc.io.crt }
+            private_key: { filename: /certs/acc.io/acc.io.key }
+    hosts:
+    - socket_address: { address: image-builder.kube-system, port_value: 443 }
+
+admin:
+  access_log_path: "/dev/stdout"
+  address:
+    socket_address: { address: 0.0.0.0, port_value: 8001 }

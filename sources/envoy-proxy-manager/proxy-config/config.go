@@ -9,13 +9,14 @@ import (
 // Config contains config for envoy-proxy
 type Config struct {
 	Listener string  `yaml:"listener"`
-	Routes   []Route `yaml: "routes"`
+	Routes   []Route `yaml:"routes"`
 }
 
 // Route contains single route entry
 type Route struct {
 	Match RouteMatch  `yaml:"match"`
-	Route RouteAction `yaml:"route"`
+	Route *RouteAction `yaml:"route"`
+	Redirect *RedirectAction `yaml:"redirect"`
 }
 
 // RouteMatch corresponds to envoy-proxy match clause
@@ -28,6 +29,11 @@ type RouteMatch struct {
 type RouteAction struct {
 	PrefixRewrite string `yaml:"prefix_rewrite"`
 	Timeout       string `yaml:"timeout"`
+}
+
+// RedirectAction corresponds to envoy-proxy redirect clause
+type RedirectAction struct {
+	PathRedirect string `yaml:"path_redirect"`
 }
 
 // Parse service annotation aria.io/proxy-config
