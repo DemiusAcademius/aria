@@ -22,17 +22,18 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: envoy-proxy
-        image: 10.10.112.27:5000/envoy-proxy.aria:0.1.0
+        image: 10.10.112.27:5000/envoy-proxy.aria:0.1.2
         ports:
         - { name: http, containerPort: 80, hostPort: 80 }
-        - { name: https, containerPort: 443, hostPort: 443 }
+        - { name: acc-https, containerPort: 443, hostPort: 443 }
+        - { name: io-https, containerPort: 8081, hostPort: 8081 }
         imagePullPolicy: IfNotPresent
         env:
         - { name: TZ, value: Europe/Chisinau }
         volumeMounts:
         - { name: certs, mountPath: /certs, readOnly: true }
       - name: envoy-proxy-manager
-        image: 10.10.112.27:5000/envoy-proxy-manager.aria:0.1.0
+        image: 10.10.112.27:5000/envoy-proxy-manager.aria:0.1.2
         imagePullPolicy: IfNotPresent
       dnsPolicy: Default
       volumes:

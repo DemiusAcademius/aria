@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.0.4
+VERSION=0.0.5
 kubectl delete service nginx -n kube-system
 kubectl delete daemonset nginx -n kube-system
 

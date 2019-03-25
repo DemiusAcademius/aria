@@ -5,7 +5,7 @@ metadata:
   namespace: kube-system
   annotations:
     aria.io/proxy-config: |
-      listener: main
+      listener: acc
       routes:
       - match: { prefix: "/ui/media/"}
         route: { prefix_rewrite: "/media/", timeout: normal }
