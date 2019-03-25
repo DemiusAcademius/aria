@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: nginx
-        image: 10.10.112.27:5000/nginx.aria:0.0.3
+        image: 10.10.112.27:5000/nginx.aria:0.0.4
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 443

@@ -64,3 +64,5 @@ Param | Value
 ## OK
 
 > SEE: https://10.10.112.27:30931/
+
+## Generate UUID on linux: uuidgen!

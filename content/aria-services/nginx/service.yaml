@@ -4,17 +4,13 @@ metadata:
   name: nginx
   namespace: kube-system
   annotations:
-    aria-proxy/config: |
+    aria.io/proxy-config: |
       listener: main
-      cluster:
-        name: nginx-server
-        connect_timeout: { seconds: 5 }
-        soxket_address: { address: nginx-server, port_value: 443 }
       routes:
       - match: { prefix: "/ui/media/"}
-        route: { prefix_rewrite: "/media/" }
-      - match: { prefix: "/"}
-        route: { prefix_rewrite: "/" }
+        route: { prefix_rewrite: "/media/", timeout: normal }
+      - match: { prefix: "/" }
+        route: { prefix_rewrite: "/", timeout: long }
 spec:
   selector:
     app: nginx

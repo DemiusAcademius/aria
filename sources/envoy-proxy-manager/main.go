@@ -16,7 +16,11 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
 
-	"demius/envoy-proxy-manager/resources"
+	envoycache "github.com/envoyproxy/go-control-plane/pkg/cache"
+	envoyserver "github.com/envoyproxy/go-control-plane/pkg/server"
+
+	handler "demius/envoy-proxy-manager/kube-handler"
+	server "demius/envoy-proxy-manager/server"
 )
 
 // https://github.com/kubernetes/client-go/blob/master/examples/workqueue/main.go
@@ -59,7 +63,18 @@ func main() {
 		panic(err.Error())
 	}
 
-	servicesInfo := resources.NewServicesInfo(clientset.CoreV1())	
+	// create a cache for envoy management server
+	cb := &server.DelegateCallbacks{}
+	snapshotCache := envoycache.NewSnapshotCache(false, server.Hasher{}, logger{})
+	srv := envoyserver.NewServer(snapshotCache, cb)
+	als := &server.AccessLogService{}
+
+	kubeHandler := handler.New(snapshotCache, clientset.CoreV1())	
+
+	// start the xDS server
+	go server.RunAccessLogServer(ctx, als, alsPort)
+	go server.RunManagementServer(ctx, srv, port)
+	// go server.RunManagementGateway(ctx, srv, gatewayPort)
 
 	resyncPeriod := 1 * time.Minute
 
@@ -71,7 +86,7 @@ func main() {
 			key, err := cache.MetaNamespaceKeyFunc(obj)
 			if err == nil {
 				srv := obj.(*v1.Service)
-				servicesInfo.HandleServiceStatusChange(srv, key, resources.ResourceCreated)
+				kubeHandler.HandleServiceStatusChange(srv, key, handler.ResourceCreated)
 			}
 		},
 		UpdateFunc: func(old interface{}, new interface{}) {},
@@ -79,7 +94,7 @@ func main() {
 			key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
 			if err == nil {
 				srv := obj.(*v1.Service)
-				servicesInfo.HandleServiceStatusChange(srv, key, resources.ResourceDeleted)
+				kubeHandler.HandleServiceStatusChange(srv, key, handler.ResourceDeleted)
 			}
 		},
 	})
@@ -92,7 +107,7 @@ func main() {
 			key, err := cache.MetaNamespaceKeyFunc(obj)
 			if err == nil {
 				srv := obj.(*v1.Endpoints)
-				servicesInfo.HandleEndpointStatusChange(srv, key, resources.ResourceCreated)
+				kubeHandler.HandleEndpointStatusChange(srv, key, handler.ResourceCreated)
 			}
 		},
 		UpdateFunc: func(old interface{}, new interface{}) {
@@ -100,15 +115,15 @@ func main() {
 			if err == nil {
 				newEndpoints := new.(*v1.Endpoints)
 				oldEndpoints := old.(*v1.Endpoints)
-				servicesInfo.HandleEndpointStatusChange(oldEndpoints, key, resources.ResourceDeleted)
-				servicesInfo.HandleEndpointStatusChange(newEndpoints, key, resources.ResourceCreated)
+				kubeHandler.HandleEndpointStatusChange(oldEndpoints, key, handler.ResourceDeleted)
+				kubeHandler.HandleEndpointStatusChange(newEndpoints, key, handler.ResourceCreated)
 			}
 		},
 		DeleteFunc: func(obj interface{}) {
 			key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
 			if err == nil {
 				srv := obj.(*v1.Endpoints)
-				servicesInfo.HandleEndpointStatusChange(srv, key, resources.ResourceDeleted)
+				kubeHandler.HandleEndpointStatusChange(srv, key, handler.ResourceDeleted)
 			}
 		},
 	})

@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.0.11
+VERSION=0.1.0
 kubectl delete daemonset proxy-service -n kube-system
 
 docker build -t envoy-proxy.aria:$VERSION aria-services/proxy-service/envoy-proxy
