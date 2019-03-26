@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: android-routes
+  namespace: billing
+  labels:
+    app: android-routes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: android-routes
+  template:
+    metadata:
+      labels:
+        app: android-routes
+      spec:
+        containers:
+        - name: android-routes
+          image: android-routes.ui.billing
+          ports:
+          - containerPort: 443
+          env:
+          - { name: TZ, value: Europe/Chisinau }
+          volumeMounts:
+          - { name: certs, mountPath: /certs, readOnly: true }
+        volumes:
+        - name: certs
+          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

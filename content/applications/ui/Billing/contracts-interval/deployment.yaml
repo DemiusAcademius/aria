@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contracts-interval
+  namespace: billing
+  labels:
+    app: contracts-interval
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contracts-interval
+  template:
+    metadata:
+      labels:
+        app: contracts-interval
+      spec:
+        containers:
+        - name: contracts-interval
+          image: contracts-interval.ui.billing
+          ports:
+          - containerPort: 443
+          env:
+          - { name: TZ, value: Europe/Chisinau }
+          volumeMounts:
+          - { name: certs, mountPath: /certs, readOnly: true }
+        volumes:
+        - name: certs
+          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

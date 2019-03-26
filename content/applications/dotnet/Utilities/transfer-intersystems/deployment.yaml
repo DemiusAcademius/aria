@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer-inersystems.api
+  namespace: billing
+  labels:
+    app: transfer-inersystems.api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transfer-inersystems.api
+  template:
+    metadata:
+      labels:
+        app: transfer-inersystems.api
+      spec:
+        containers:
+        - name: transfer-inersystems.api
+          image: transfer-inersystems.api.billing
+          ports:
+          - containerPort: 443
+          env:
+          - { name: TZ, value: Europe/Chisinau }
+          volumeMounts:
+          - { name: certs, mountPath: /certs, readOnly: true }
+        volumes:
+        - name: certs
+          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

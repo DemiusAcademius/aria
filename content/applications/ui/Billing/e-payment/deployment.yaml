@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: e-payment
+  namespace: billing
+  labels:
+    app: e-payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: e-payment
+  template:
+    metadata:
+      labels:
+        app: e-payment
+      spec:
+        containers:
+        - name: e-payment
+          image: e-payment.ui.billing
+          ports:
+          - containerPort: 443
+          env:
+          - { name: TZ, value: Europe/Chisinau }
+          volumeMounts:
+          - { name: certs, mountPath: /certs, readOnly: true }
+        volumes:
+        - name: certs
+          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

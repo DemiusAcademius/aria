@@ -1,0 +1,17 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: generate-invoice-barcodes
+  namespace: billing
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:    
+    spec:
+      template:
+        spec:
+          containers:
+          - name: generate-invoice-barcodes.billing
+            image: generate-invoice-barcodes.billing
+            env:
+            - { name: TZ, value: Europe/Chisinau }
+          restartPolicy: OnFailure

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: remote-indications.api
+  namespace: billing
+  labels:
+    app: remote-indications.api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: remote-indications.api
+  template:
+    metadata:
+      labels:
+        app: remote-indications.api
+      spec:
+        containers:
+        - name: remote-indications.api
+          image: remote-indications.api.billing
+          ports:
+          - containerPort: 443
+          env:
+          - { name: TZ, value: Europe/Chisinau }
+          volumeMounts:
+          - { name: certs, mountPath: /certs, readOnly: true }
+        volumes:
+        - name: certs
+          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

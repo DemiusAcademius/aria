@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: android-routes
+  namespace: billing
+  annotations:
+    aria.io/proxy-config: |
+      listener: acc
+      routes:
+      - match: { prefix: "/ui/android-routes/"}
+        route: { prefix_rewrite: "/", timeout: normal }
+      - match: { prefix: "/ui/android-routes" }
+        redirect: { path_redirect: "/ui/android-routes/" }
+spec:
+  selector:
+    app: android-routes
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 443

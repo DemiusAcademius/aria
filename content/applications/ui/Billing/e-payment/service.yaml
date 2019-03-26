@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: e-payment
+  namespace: billing
+  annotations:
+    aria.io/proxy-config: |
+      listener: acc
+      routes:
+      - match: { prefix: "/ui/e-payment/"}
+        route: { prefix_rewrite: "/", timeout: normal }
+      - match: { prefix: "/ui/e-payment" }
+        redirect: { path_redirect: "/ui/e-payment/" }
+spec:
+  selector:
+    app: e-payment
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 443

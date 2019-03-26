@@ -1,0 +1,17 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: verification-client-email
+  namespace: billing
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:    
+    spec:
+      template:
+        spec:
+          containers:
+          - name: verification-client-email.billing
+            image: verification-client-email.billing
+            env:
+            - { name: TZ, value: Europe/Chisinau }
+          restartPolicy: OnFailure

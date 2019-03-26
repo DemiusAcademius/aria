@@ -1,0 +1,17 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: sync-android-routes
+  namespace: billing
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:    
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sync-android-routes.billing
+            image: sync-android-routes.billing
+            env:
+            - { name: TZ, value: Europe/Chisinau }
+          restartPolicy: OnFailure

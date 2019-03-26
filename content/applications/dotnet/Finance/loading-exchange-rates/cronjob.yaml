@@ -1,0 +1,17 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: loading-exchange-rates
+  namespace: finance
+spec:
+  schedule: "30 7 * * *"
+  jobTemplate:    
+    spec:
+      template:
+        spec:
+          containers:
+          - name: loading-exchange-rates.finance
+            image: loading-exchange-rates.finance
+            env:
+            - { name: TZ, value: Europe/Chisinau }
+          restartPolicy: OnFailure
