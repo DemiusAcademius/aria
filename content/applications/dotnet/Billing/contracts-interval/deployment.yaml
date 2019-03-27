@@ -5,6 +5,7 @@ metadata:
   namespace: billing
   labels:
     app: contracts-interval.api
+    kind: aria-app
 spec:
   replicas: 1
   selector:
@@ -14,16 +15,16 @@ spec:
     metadata:
       labels:
         app: contracts-interval.api
-      spec:
-        containers:
-        - name: contracts-interval.api
-          image: contracts-interval.api.billing
-          ports:
-          - containerPort: 443
-          env:
-          - { name: TZ, value: Europe/Chisinau }
-          volumeMounts:
-          - { name: certs, mountPath: /certs, readOnly: true }
-        volumes:
-        - name: certs
-          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+    spec:
+      containers:
+      - name: contracts-interval-api
+        image: contracts-interval.api.billing
+        ports:
+        - containerPort: 443
+        env:
+        - { name: TZ, value: Europe/Chisinau }
+        volumeMounts:
+        - { name: certs, mountPath: /certs, readOnly: true }
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

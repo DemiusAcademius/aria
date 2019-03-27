@@ -4,13 +4,15 @@ metadata:
   name: verification-client-email
   namespace: billing
 spec:
+  concurrencyPolicy: Forbid
   schedule: "*/10 * * * *"
   jobTemplate:    
     spec:
+      ttlSecondsAfterFinished: 900
       template:
         spec:
           containers:
-          - name: verification-client-email.billing
+          - name: verification-client-email
             image: verification-client-email.billing
             env:
             - { name: TZ, value: Europe/Chisinau }

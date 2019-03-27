@@ -1,29 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transfer-inersystems.api
-  namespace: billing
+  name: transfer-intersystems.api
+  namespace: utilities
   labels:
-    app: transfer-inersystems.api
+    app: transfer-intersystems.api
+    kind: aria-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: transfer-inersystems.api
+      app: transfer-intersystems.api
   template:
     metadata:
       labels:
-        app: transfer-inersystems.api
-      spec:
-        containers:
-        - name: transfer-inersystems.api
-          image: transfer-inersystems.api.billing
-          ports:
-          - containerPort: 443
-          env:
-          - { name: TZ, value: Europe/Chisinau }
-          volumeMounts:
-          - { name: certs, mountPath: /certs, readOnly: true }
-        volumes:
-        - name: certs
-          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+        app: transfer-intersystems.api
+    spec:
+      containers:
+      - name: transfer-intersystems-api
+        image: transfer-intersystems.api.utilities
+        ports:
+        - containerPort: 443
+        env:
+        - { name: TZ, value: Europe/Chisinau }
+        volumeMounts:
+        - { name: certs, mountPath: /certs, readOnly: true }
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

@@ -4,13 +4,15 @@ metadata:
   name: sync-e-payment
   namespace: billing
 spec:
+  concurrencyPolicy: Forbid
   schedule: "*/5 * * * *"
   jobTemplate:    
     spec:
+      ttlSecondsAfterFinished: 900
       template:
         spec:
           containers:
-          - name: sync-e-payment.billing
+          - name: sync-e-payment
             image: sync-e-payment.billing
             env:
             - { name: TZ, value: Europe/Chisinau }

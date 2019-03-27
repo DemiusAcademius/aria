@@ -12,5 +12,4 @@ require (
 	golang.org/x/crypto v0.0.0-20190123085648-057139ce5d2b
 	golang.org/x/sys v0.0.0-20190209173611-3b5209105503 // indirect
 	gopkg.in/yaml.v2 v2.2.2
-	rsc.io/quote v1.5.2
 )

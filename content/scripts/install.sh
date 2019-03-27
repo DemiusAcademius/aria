@@ -10,7 +10,11 @@ echo ""
 # timezone to Chisinau
 timedatectl set-timezone Europe/Chisinau
 
+# config /etc/hosts
+echo '127.0.0.1   kubernetes-srv' >> /etc/hosts
+
 # add kubernetes to packages registry
+echo -e "${BLUE}add kubernetes packages to registry${NC}"
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb https://apt.kubernetes.io/ kubernetes-xenial main
@@ -59,8 +63,21 @@ mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown -R acc-server-admin:acc-server-admin $HOME/.kube/config
 
+# setup resolv.conf in pods
+cp scripts/resolv.conf /etc/kubernetes/resolv.conf
+sed -i 's:/run/systemd/resolve/resolv.conf:/etc/kubernetes/resolv.conf:g' /var/lib/kubelet/kubeadm-flags.env
+systemctl restart kubelet
+
+# tuning core-dns config
+kubectl delete cm coredns -n kube-system
+kubectl create -f manifests/dns-config.yaml
+kubectl delete pod -l k8s-app=kube-dns -n kube-system
+
 # install pod network addon (flannel)
 # see: https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
 
 echo -e "${RED}OK${NC}"
+echo -e "${RED}SYSTEM WILL REBOOT NOW${NC}"
+reboot
+

@@ -5,6 +5,7 @@ metadata:
   namespace: billing
   labels:
     app: android-routes
+    kind: aria-app
 spec:
   replicas: 1
   selector:
@@ -14,16 +15,16 @@ spec:
     metadata:
       labels:
         app: android-routes
-      spec:
-        containers:
-        - name: android-routes
-          image: android-routes.ui.billing
-          ports:
-          - containerPort: 443
-          env:
-          - { name: TZ, value: Europe/Chisinau }
-          volumeMounts:
-          - { name: certs, mountPath: /certs, readOnly: true }
-        volumes:
-        - name: certs
-          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+    spec:
+      containers:
+      - name: android-routes
+        image: android-routes.ui.billing
+        ports:
+        - containerPort: 443
+        env:
+        - { name: TZ, value: Europe/Chisinau }
+        volumeMounts:
+        - { name: certs, mountPath: /certs, readOnly: true }
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

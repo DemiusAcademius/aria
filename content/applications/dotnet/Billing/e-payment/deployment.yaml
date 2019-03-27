@@ -5,6 +5,7 @@ metadata:
   namespace: billing
   labels:
     app: e-payment.api
+    kind: aria-app
 spec:
   replicas: 1
   selector:
@@ -14,16 +15,16 @@ spec:
     metadata:
       labels:
         app: e-payment.api
-      spec:
-        containers:
-        - name: e-payment.api
-          image: e-payment.api.billing
-          ports:
-          - containerPort: 443
-          env:
-          - { name: TZ, value: Europe/Chisinau }
-          volumeMounts:
-          - { name: certs, mountPath: /certs, readOnly: true }
-        volumes:
-        - name: certs
-          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+    spec:
+      containers:
+      - name: e-payment-api
+        image: e-payment.api.billing
+        ports:
+        - containerPort: 443
+        env:
+        - { name: TZ, value: Europe/Chisinau }
+        volumeMounts:
+        - { name: certs, mountPath: /certs, readOnly: true }
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

@@ -119,9 +119,9 @@ func (handler *KubeHandler) HandleServiceStatusChange(srv *v1.Service, key strin
 
 	log.Printf("Srv: %s.%s -> %s", name, namespace, ct)
 
-	if ariaProxyCOnfig, ok := annotations["aria.io/proxy-config"]; ok {
-		log.Printf("   Config: %s", ariaProxyCOnfig)
-		proxyconfig, err := proxyconf.Parse([]byte(ariaProxyCOnfig))
+	if ariaProxyConfig, ok := annotations["aria.io/proxy-config"]; ok {
+		log.Printf("   Config: %s", ariaProxyConfig)
+		proxyconfig, err := proxyconf.Parse([]byte(ariaProxyConfig))
 		if err == nil {
 			ns, ok := handler.namespaces[srv.Namespace]
 			if changeType == ResourceCreated {

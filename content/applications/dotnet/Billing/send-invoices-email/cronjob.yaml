@@ -4,13 +4,15 @@ metadata:
   name: send-invoices-email
   namespace: billing
 spec:
+  concurrencyPolicy: Forbid
   schedule: "*/5 * * * *"
   jobTemplate:    
     spec:
+      ttlSecondsAfterFinished: 900
       template:
         spec:
           containers:
-          - name: send-invoices-email.billing
+          - name: send-invoices-email
             image: send-invoices-email.billing
             env:
             - { name: TZ, value: Europe/Chisinau }

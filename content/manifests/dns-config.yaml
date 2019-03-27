@@ -9,13 +9,12 @@ data:
       errors
       health
       kubernetes cluster.local in-addr.arpa ip6.arpa {
-        upstream 10.10.0.250  10.10.0.252
+        upstream 10.10.0.250 10.10.0.252
         pods insecure
-        upstream
         fallthrough in-addr.arpa ip6.arpa
       }
       prometheus :9153
-      proxy . 10.10.0.250  10.10.0.252
+      forward . 10.10.0.250 10.10.0.252
       cache 30
       loop
       reload

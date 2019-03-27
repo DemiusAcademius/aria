@@ -5,6 +5,7 @@ metadata:
   namespace: admin
   labels:
     app: identity
+    kind: aria-app
 spec:
   replicas: 1
   selector:
@@ -14,14 +15,14 @@ spec:
     metadata:
       labels:
         app: identity
-      spec:
-        containers:
-        - name: identity
-          image: identity.ui.admin
-          ports:
-          - containerPort: 443
-          volumeMounts:
-          - { name: certs, mountPath: /certs, readOnly: true }
-        volumes:
-        - name: certs
-          hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+    spec:
+      containers:
+      - name: identity
+        image: identity.ui.admin
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - { name: certs, mountPath: /certs, readOnly: true }
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, readOnly: true }

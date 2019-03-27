@@ -4,13 +4,15 @@ metadata:
   name: sync-android-routes
   namespace: billing
 spec:
+  concurrencyPolicy: Forbid
   schedule: "*/5 * * * *"
   jobTemplate:    
     spec:
+      ttlSecondsAfterFinished: 900
       template:
         spec:
           containers:
-          - name: sync-android-routes.billing
+          - name: sync-android-routes
             image: sync-android-routes.billing
             env:
             - { name: TZ, value: Europe/Chisinau }
