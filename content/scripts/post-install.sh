@@ -61,4 +61,7 @@ echo ""
 echo -e "${RED}COPY DASHBOARD AUTH TOKEN:${NC}"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep dashboard-user | awk '{print $1}')
 
+chmod +x scripts/sync-applications
+
 echo -e "${RED}OK${NC}"
+echo -e "${RED}run scripts/sync-applications${NC}"
