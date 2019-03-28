@@ -35,26 +35,27 @@ kubectl create secret docker-registry regcred --docker-server=10.10.112.27:5000 
 echo ""
 echo -e "${BLUE}Deploy PROXY${NC}"
 PROXY_VERSION=0.1.2
-docker build -t envoy-proxy.aria:$PROXY_VERSION aria-services/proxy-service/envoy-proxy
-docker tag envoy-proxy.aria:$PROXY_VERSION 10.10.112.27:5000/envoy-proxy.aria:$PROXY_VERSION
-docker push 10.10.112.27:5000/envoy-proxy.aria:$PROXY_VERSION
+docker build -t aria-proxy-service:$PROXY_VERSION aria-services/aria-proxy/aria-proxy-service
+docker tag aria-proxy-service:$PROXY_VERSION 10.10.112.27:5000/aria-proxy-service:$PROXY_VERSION
+docker push 10.10.112.27:5000/aria-proxy-service:$PROXY_VERSION
 
-docker build -t envoy-proxy-manager.aria:$PROXY_VERSION aria-services/proxy-service/envoy-proxy-manager
-docker tag envoy-proxy-manager.aria:$PROXY_VERSION 10.10.112.27:5000/envoy-proxy-manager.aria:$PROXY_VERSION
-docker push 10.10.112.27:5000/envoy-proxy-manager.aria:$VERSION
+docker build -t aria-proxy-manager:$PROXY_VERSION aria-services/aria-proxy/aria-proxy-manager
+docker tag aria-proxy-manager:$PROXY_VERSION 10.10.112.27:5000/aria-proxy-manager:$PROXY_VERSION
+docker push 10.10.112.27:5000/aria-proxy-manager:$PROXY_VERSION
 
-kubectl create -f aria-services/proxy-service/daemonset.yaml
+kubectl create -f aria-services/aria-proxy/daemonset.yaml
+
 
 # deploy nginx
 echo ""
 echo -e "${BLUE}Deploy static web-server${NC}"
 NGINX_VERSION=0.0.5
-docker build -t nginx.aria:$NGINX_VERSION aria-services/nginx
-docker tag nginx.aria:$NGINX_VERSION 10.10.112.27:5000/nginx.aria:$NGINX_VERSION
-docker push 10.10.112.27:5000/nginx.aria:$NGINX_VERSION
+docker build -t aria-nginx:$NGINX_VERSION aria-services/aria-nginx
+docker tag aria-nginx:$NGINX_VERSION 10.10.112.27:5000/aria-nginx:$NGINX_VERSION
+docker push 10.10.112.27:5000/aria-nginx:$NGINX_VERSION
 
-kubectl create -f aria-services/nginx/daemonset.yaml
-kubectl create -f aria-services/nginx/service.yaml
+kubectl create -f aria-services/aria-nginx/daemonset.yaml
+kubectl create -f aria-services/aria-nginx/service.yaml
 
 # find bearer token for login to dashboard
 echo ""

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: aria-publisher
+  namespace: kube-system
+  labels:
+    app: aria-publisher
+spec:
+  selector:
+    matchLabels:
+      app: aria-publisher
+  template:
+    metadata:
+      labels:
+        app: aria-publisher
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: aria-publisher
+        image: 10.10.112.27:5000/aria-publisher:0.0.2
+        ports:
+        - { name: grpc, containerPort: 9999, hostPort: 9999 }
+        imagePullPolicy: IfNotPresent
+        env:
+        - { name: TZ, value: Europe/Chisinau }
+        volumeMounts:
+        - { name: certs, mountPath: /certs, readOnly: true }
+      dnsPolicy: Default
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+      serviceAccountName: aria-services-account
+      imagePullSecrets:
+      - name: regcred

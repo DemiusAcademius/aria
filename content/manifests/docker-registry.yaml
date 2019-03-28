@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: docker-registry
+  namespace: kube-system
+  labels:
+    app: docker-registry
+spec:
+  selector:
+    matchLabels:
+      name: docker-registry
+  template:
+    metadata:  
+      labels:
+        app: docker-registry
+        name: docker-registry
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: docker-registry
+        image: registry:2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          hostPort: 5000
+        securityContext:
+          privileged: true        
+        env:
+        - { name: REGISTRY_HTTP_TLS_CERTIFICATE, value: /certs/acc.io/acc.io.crt }
+        - { name: REGISTRY_HTTP_TLS_KEY, value: /certs/acc.io/acc.io.key }
+        - { name: REGISTRY_AUTH, value: htpasswd }
+        - { name: REGISTRY_AUTH_HTPASSWD_PATH, value: /auth/htpasswd }
+        - { name: REGISTRY_AUTH_HTPASSWD_REALM, value: Registry Realm }
+        volumeMounts:
+        - name: registry-auth
+          mountPath: /auth
+        - name: registry-certs
+          mountPath: /certs
+        - name: registry-data
+          mountPath: /var/lib/registry
+      volumes:
+        - name: registry-auth
+          hostPath: { path: /home/acc-server-admin/auth, type: Directory }
+        - name: registry-certs
+          hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+        - name: registry-data
+          hostPath: { path: /home/acc-server-admin/registry-data, type: Directory }

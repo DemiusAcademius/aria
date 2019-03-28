@@ -1,13 +1,13 @@
 #!/bin/bash
 VERSION=0.1.2
-kubectl delete daemonset proxy-service -n kube-system
+kubectl delete daemonset aria-proxy -n kube-system
 
-docker build -t envoy-proxy.aria:$VERSION aria-services/proxy-service/envoy-proxy
-docker tag envoy-proxy.aria:$VERSION 10.10.112.27:5000/envoy-proxy.aria:$VERSION
-docker push 10.10.112.27:5000/envoy-proxy.aria:$VERSION
+docker build -t aria-proxy-service:$VERSION aria-services/aria-proxy/aria-proxy-service
+docker tag aria-proxy-service:$VERSION 10.10.112.27:5000/aria-proxy-service:$VERSION
+docker push 10.10.112.27:5000/aria-proxy-service:$VERSION
 
-docker build -t envoy-proxy-manager.aria:$VERSION aria-services/proxy-service/envoy-proxy-manager
-docker tag envoy-proxy-manager.aria:$VERSION 10.10.112.27:5000/envoy-proxy-manager.aria:$VERSION
-docker push 10.10.112.27:5000/envoy-proxy-manager.aria:$VERSION
+docker build -t aria-proxy-manager:$VERSION aria-services/aria-proxy/aria-proxy-manager
+docker tag aria-proxy-manager:$VERSION 10.10.112.27:5000/aria-proxy-manager:$VERSION
+docker push 10.10.112.27:5000/aria-proxy-manager:$VERSION
 
-kubectl create -f aria-services/proxy-service/daemonset.yaml
+kubectl create -f aria-services/aria-proxy/daemonset.yaml

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: aria-nginx
+  namespace: kube-system
+  labels:
+    app: aria-nginx
+spec:
+  selector:
+    matchLabels:
+      app: aria-nginx
+  template:
+    metadata:
+      labels:
+        app: aria-nginx
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: aria-nginx
+        image: 10.10.112.27:5000/aria-nginx:0.0.5
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - { name: certs , mountPath: /certs, readOnly: true }
+      dnsPolicy: Default
+      volumes:
+      - name: certs
+        hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+      imagePullSecrets:
+      - name: regcred
