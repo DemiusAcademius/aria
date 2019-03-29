@@ -6,7 +6,7 @@
 
 Param | Value  | Comments
 ------|--------|----------
-**VM-Name**    | kubernetes-srv
+**VM-Name**    | aria-server
 **disk**       | 400Gb
 **RAM**        | 16Gb    | 16384Mib
 **CPUs**       | 4
@@ -29,7 +29,7 @@ Param | Value
 Param | Value
 ------|------
 **Your name**   | Demius Academius
-**Server name** | kubernetes-srv
+**Server name** | aria-server
 **Username**    | acc-server-admin
 **Password**    | shwsa3nn
 
@@ -49,7 +49,7 @@ Param | Value
 
 **Reboot server**
 
-    sudo reboot
+    server will reboot automatically
 
 ## Post-install K8S
 
