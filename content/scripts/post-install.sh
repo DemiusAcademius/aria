@@ -26,7 +26,7 @@ echo -e "${BLUE}Install registry${NC}"
 mkdir registry-data
 docker run --entrypoint htpasswd registry:2 -Bbn kube-registry-user yf-ujhirt-cbltk-rjhjkm > ./auth/htpasswd
 chown root:root ./auth/htpasswd
-kubectl create -f manifests/docker-registry-daemonset.yaml
+kubectl create -f manifests/docker-registry.yaml
 
 # connect k8s to registry
 kubectl create secret docker-registry regcred --docker-server=10.10.112.27:5000 --docker-username=kube-registry-user --docker-password=yf-ujhirt-cbltk-rjhjkm --docker-email=demius.md@gmail.com

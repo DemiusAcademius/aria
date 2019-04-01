@@ -63,6 +63,10 @@ Param | Value
 
 ## OK
 
-> SEE: https://10.10.112.27:30931/
+> SEE: https://aria.acc.md:30931/
+
+## Generate applications manifests
+
+    scripts/sync-applications
 
 ## Generate UUID on linux: uuidgen!
