@@ -17,3 +17,7 @@ spec:
             env:
             - { name: TZ, value: Europe/Chisinau }
           restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: regcred
+          imagePullSecrets:
+          - name: regcred

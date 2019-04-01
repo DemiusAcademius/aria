@@ -1,6 +1,8 @@
 package dotnet
 
 import (
+	"text/template"
+	"os"
 	"fmt"
 	"bytes"
 	"os/exec"
@@ -11,7 +13,6 @@ import (
 
 	"github.com/fatih/color"
 
-	"demius/publish-project/api"
 	"demius/publish-project/core"
 )
 
@@ -27,8 +28,14 @@ type PropertyGroup struct {
 	TargetFramework string  `xml:"TargetFramework"`
 }
 
+// DockerTemplate variables for Dockerfile template
+type DockerTemplate struct {
+	Version string
+	Executable    string
+}
+
 // Build dot.net project and fill the grpc Request
-func Build(projectPath, projectName string, request *api.Request) {
+func Build(configPath, projectPath, projectName string) []byte {
 	projectFile := path.Join(projectPath, projectName+".csproj")
 	project := loadProject(projectFile)
 
@@ -53,6 +60,16 @@ func Build(projectPath, projectName string, request *api.Request) {
 	publishPath := path.Join(projectPath, "bin", "Release", targetFramework, "publish")
 	println()
 	core.PrintBlue("    publish path: " , publishPath)
+
+	println()
+	color.Magenta("GENERATE TARBALL")
+
+	dockerfile := generateDockerfile(configPath, projectName, runtimeVersion)
+	tarBuffer, err := core.CreateTarball(publishPath, dockerfile)
+	if err != nil {
+		core.PrintErrorAndPanic(err)
+	}
+	return tarBuffer
 }
 
 func loadProject(path string) *Project {
@@ -67,5 +84,30 @@ func loadProject(path string) *Project {
 	}
 
 	return c
+}
 
+func generateDockerfile(configPath, projectName, runtimeVersion string) []byte {
+	dockerfilePath := path.Join(configPath, "dockerfiles", "dotnet", "Dockerfile")
+	fp, err := os.Open(dockerfilePath)
+	if err != nil {
+		core.PrintErrorAndPanic(fmt.Errorf("can not open source file %s: %v", dockerfilePath, err))
+	}
+	defer fp.Close()
+
+	dockerfile, err := ioutil.ReadAll(fp)
+	if err != nil {
+		core.PrintErrorAndPanic(fmt.Errorf("can not read Dockerfile %s: %v", dockerfilePath, err))
+	}
+
+	dt := DockerTemplate { Version: runtimeVersion, Executable: projectName }
+	tmpl, err := template.New("Dockerfile").Parse(string(dockerfile[:len(dockerfile)]))
+	if err != nil {
+		core.PrintErrorAndPanic(fmt.Errorf("can not parse template for Dockerfile: %v", err))
+	}
+	dockerfileBuffer := new(bytes.Buffer)
+	err = tmpl.Execute(dockerfileBuffer, dt)
+	if err != nil {
+		core.PrintErrorAndPanic(fmt.Errorf("can not apply variables to Dockerfile template: %v", err))
+	}
+	return dockerfileBuffer.Bytes()
 }

@@ -17,6 +17,9 @@ import (
 func main() {
 	config := publisher.LoadConfiguration()
 
+	registryAuthPath := "/auth/credentials.yaml"
+	regCreds := publisher.LoadRegistryCredentials(registryAuthPath)
+
 	listener, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", config.ServerPort))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -34,7 +37,7 @@ func main() {
 	opts = []grpc.ServerOption{grpc.Creds(creds)}
 
 	grpcServer := grpc.NewServer(opts...)
-	api.RegisterPublishRequestServer(grpcServer, publisher.NewServer())
+	api.RegisterPublishRequestServer(grpcServer, publisher.NewServer(regCreds, config.RegistryURL))
 
 	log.Printf("Starting aria-publish-service at `localhost:%s`\n", config.ServerPort)
 

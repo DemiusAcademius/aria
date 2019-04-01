@@ -1,6 +1,7 @@
 syntax = "proto3";
 
-// generate for GO: protoc -I api api/publish-request.proto --go_out=plugins=grpc:api
+// go get -u github.com/golang/protobuf/protoc-gen-go
+// generate for GO: C:\Protoc\bin\protoc -I api api/publish-request.proto --go_out=plugins=grpc:api
 
 package api;
 
@@ -8,36 +9,17 @@ service PublishRequest {
     rpc Publish(Request) returns (Response) {}
 }
 
-message DotnetOptions {
-    string from_clause  = 1;
-    string project_name = 2;
-}
-
-message JavaOptions {
-    string from_clause  = 1;
-    string jarfile_name = 2;
-}
-
-message WebUiOptions {}
-
-message CustomDockerfile {
-    bytes dockerfile = 1;
+enum ArtifactKind {
+    CronJob = 0;
+    Deployment = 1;
 }
 
 message Request {
-    string artifact_name = 1;
-    string namespace     = 2;
-    string artifact_kind = 3;
-    string image_name    = 4;
-
-    oneof docker_options {
-        DotnetOptions    dotnet_options    = 5;
-        JavaOptions      java_options      = 6;
-        WebUiOptions     webui_options     = 7;
-        CustomDockerfile custom_dockerfile = 8;
-    }
-
-    bytes docker_content = 9;
+    string name           = 1;
+    string namespace      = 2;
+    ArtifactKind kind     = 3;
+    string image_name     = 4;
+    bytes  docker_content = 5;
 }
 
 message Response {

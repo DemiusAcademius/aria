@@ -4,6 +4,8 @@ import (
 	"os"
 	"github.com/fatih/color"
     "path"    
+
+    "demius/publish-project/api"
 )
 
 // ProjectType of artifact for build
@@ -35,10 +37,15 @@ func DetectProjectType(projectPath, projectName string) ProjectType {
     return -1
 }
 
-// CheckArtifactKind and panic if it wrong
-func CheckArtifactKind(artifactKind string) {
-    if artifactKind != "deployment" && artifactKind != "cronjob" {
-        color.Red("Invalid artifact kind. Must be `deployment` or `cronjob`")
-        os.Exit(-1)    
+// ConvertArtifactKind and panic if it wrong
+func ConvertArtifactKind(artifactKind string) api.ArtifactKind{
+    switch artifactKind {
+    case "cronjob": return api.ArtifactKind_CronJob
+    case "deployment": return api.ArtifactKind_Deployment
     }
+    
+    color.Red("Invalid artifact kind. Must be `deployment` or `cronjob`")
+    os.Exit(-1)    
+
+    return -1
 }

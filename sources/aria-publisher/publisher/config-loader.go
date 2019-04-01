@@ -11,6 +11,7 @@ type ServiceConfig struct {
 	CertFile       string `env:"CERT_FILE" default:"/certs/acc.io/acc.io.crt"`
 	KeyFile        string `env:"KEY_FILE" default:"/certs/acc.io/acc.io.key"`
 	ServerPort     string `env:"PORT" default:"9999"`
+	RegistryURL    string `env:"REGISTRY_URL" default:"10.10.112.27:5000"`	
 }
 
 /* Non-exported instance to avoid accidental overwrite */

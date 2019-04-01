@@ -22,18 +22,26 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: aria-publisher
-        image: 10.10.112.27:5000/aria-publisher:0.0.2
+        image: 10.10.112.27:5000/aria-publisher:0.1.0
         ports:
         - { name: grpc, containerPort: 9999, hostPort: 9999 }
         imagePullPolicy: IfNotPresent
         env:
         - { name: TZ, value: Europe/Chisinau }
         volumeMounts:
+        - { name: auth, mountPath: /auth, readOnly: true }
         - { name: certs, mountPath: /certs, readOnly: true }
+        - { name: docker-socket-volume, mountPath: /var/run/docker.sock }
+        securityContext:
+          privileged: true        
       dnsPolicy: Default
       volumes:
+      - name: auth
+        hostPath: { path: /home/acc-server-admin/auth, type: Directory }
       - name: certs
         hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+      - name: docker-socket-volume
+        hostPath: { path: /var/run/docker.sock, type: File }
       serviceAccountName: aria-services-account
       imagePullSecrets:
       - name: regcred

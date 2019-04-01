@@ -45,9 +45,15 @@ func PrintMagenta(label, text string) {
 	color.Magenta(text)
 }
 
-// PrintErrorAndPanic prints error text in Red
+// PrintErrorAndPanic prints error text in Red and exit
 func PrintErrorAndPanic(errorText error) {
 	color.Red(fmt.Sprintf("%s\n", errorText))
+	os.Exit(-1)
+}
+
+// PrintInRedAndPanic prints text in red and exit
+func PrintInRedAndPanic(text string) {
+	color.Red(text)
 	os.Exit(-1)
 }
 
