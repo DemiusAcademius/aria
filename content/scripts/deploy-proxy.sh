@@ -1,6 +1,9 @@
 #!/bin/bash
 VERSION=0.1.2
-kubectl delete daemonset aria-proxy -n kube-system
+
+if $1 ; then
+    kubectl delete daemonset aria-proxy -n kube-system
+fi
 
 docker build -t aria-proxy-service:$VERSION aria-services/aria-proxy/aria-proxy-service
 docker tag aria-proxy-service:$VERSION 10.10.112.27:5000/aria-proxy-service:$VERSION

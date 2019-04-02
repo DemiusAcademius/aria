@@ -64,7 +64,7 @@ cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown -R acc-server-admin:acc-server-admin $HOME/.kube/config
 
 # setup resolv.conf in pods
-cp scripts/resolv.conf /etc/kubernetes/resolv.conf
+cp assets/resolv.conf /etc/kubernetes/resolv.conf
 sed -i 's:/run/systemd/resolve/resolv.conf:/etc/kubernetes/resolv.conf:g' /var/lib/kubelet/kubeadm-flags.env
 systemctl restart kubelet
 
@@ -79,5 +79,6 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 
 echo -e "${RED}OK${NC}"
 echo -e "${RED}SYSTEM WILL REBOOT NOW${NC}"
+echo -e "${RED}run scripts/install-after-reboot${NC}"
 reboot
 

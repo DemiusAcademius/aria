@@ -1,6 +1,9 @@
 #!/bin/bash
 VERSION=0.1.0
-kubectl delete daemonset aria-publisher -n kube-system
+
+if $1 ; then
+    kubectl delete daemonset aria-publisher -n kube-system
+fi
 
 docker build -t aria-publisher:$VERSION aria-services/aria-publisher
 docker tag aria-publisher:$VERSION 10.10.112.27:5000/aria-publisher:$VERSION

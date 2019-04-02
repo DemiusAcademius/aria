@@ -8,7 +8,7 @@ metadata:
       listener: acc
       routes:
       - match: { prefix: "/api/e-payment/"}
-        route: { prefix_rewrite: "/", timeout: infinity }
+        route: { prefix_rewrite: "/api/", timeout: infinity }
 spec:
   selector:
     app: e-payment.api

@@ -1,7 +1,10 @@
 #!/bin/bash
 VERSION=0.0.5
-kubectl delete service aria-nginx -n kube-system
-kubectl delete daemonset aria-nginx -n kube-system
+
+if $1 ; then
+    kubectl delete service aria-nginx -n kube-system
+    kubectl delete daemonset aria-nginx -n kube-system
+fi
 
 docker build -t aria-nginx:$VERSION aria-services/aria-nginx
 docker tag aria-nginx:$VERSION 10.10.112.27:5000/aria-nginx:$VERSION

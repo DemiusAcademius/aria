@@ -8,7 +8,7 @@ metadata:
       listener: acc
       routes:
       - match: { prefix: "/api/identity/"}
-        route: { prefix_rewrite: "/", timeout: normal }
+        route: { prefix_rewrite: "/api/", timeout: normal }
 spec:
   selector:
     app: identity.api
