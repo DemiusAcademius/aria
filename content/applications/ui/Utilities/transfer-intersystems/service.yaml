@@ -7,9 +7,9 @@ metadata:
     aria.io/proxy-config: |
       listener: acc
       routes:
-      - match: { prefix: "/ui/transfer-intersystems/"}
+      - match: { prefix: "/ui/utilities/transfer-intersystems/"}
         route: { prefix_rewrite: "/", timeout: normal }
-      - match: { prefix: "/ui/transfer-itnersystems"}
+      - match: { prefix: "/ui/utilities/transfer-itnersystems"}
         redirect: { path_redirect: "/ui/transfer-intersystems/" }
 spec:
   selector:

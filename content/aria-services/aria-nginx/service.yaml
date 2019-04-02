@@ -9,8 +9,6 @@ metadata:
       routes:
       - match: { prefix: "/ui/media/"}
         route: { prefix_rewrite: "/media/", timeout: normal }
-      - match: { prefix: "/" }
-        route: { prefix_rewrite: "/", timeout: long }
 spec:
   selector:
     app: aria-nginx

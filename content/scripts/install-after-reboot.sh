@@ -43,4 +43,4 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 chmod +x scripts/sync-applications
 
 echo -e "${RED}OK${NC}"
-echo -e "${RED}run scripts/install-aria.sh${NC}"
+echo -e "${RED}run sudo scripts/install-aria.sh${NC}"

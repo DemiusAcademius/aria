@@ -14,6 +14,9 @@ import (
 	"demius/aria-publisher/publisher"
 )
 
+// MaxMessageSize maximum message size of GRPC
+const MaxMessageSize = 1024 * 1024 * 12
+
 func main() {
 	config := publisher.LoadConfiguration()
 
@@ -34,7 +37,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to generate credentials %v", err)
 	}
-	opts = []grpc.ServerOption{grpc.Creds(creds)}
+	opts = []grpc.ServerOption{grpc.Creds(creds), grpc.MaxRecvMsgSize(MaxMessageSize)}
 
 	grpcServer := grpc.NewServer(opts...)
 	api.RegisterPublishRequestServer(grpcServer, publisher.NewServer(regCreds, config.RegistryURL))

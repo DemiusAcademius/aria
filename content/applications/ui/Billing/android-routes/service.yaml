@@ -7,9 +7,9 @@ metadata:
     aria.io/proxy-config: |
       listener: acc
       routes:
-      - match: { prefix: "/ui/android-routes/"}
+      - match: { prefix: "/ui/billing/android-routes/"}
         route: { prefix_rewrite: "/", timeout: normal }
-      - match: { prefix: "/ui/android-routes" }
+      - match: { prefix: "/ui/billing/android-routes" }
         redirect: { path_redirect: "/ui/android-routes/" }
 spec:
   selector:

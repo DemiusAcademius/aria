@@ -5,7 +5,6 @@ RED='\033[1;31m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}INSTALL ARIA${NC}"
-echo ""
 
 # deploy proxy-service
 echo ""
@@ -26,3 +25,9 @@ scripts/deploy-publisher.sh false
 echo ""
 echo -e "${BLUE}Sync applications${NC}"
 scripts/sync-applications
+
+# deploy redis
+kubectl create -f manifests/aria-redis.yaml
+
+echo ""
+echo -e "${RED}ARIA INSTALLED${NC}"

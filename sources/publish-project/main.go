@@ -16,6 +16,9 @@ import (
 	"demius/publish-project/toolchains/dotnet"
 )
 
+// MaxMessageSize maximum message size of GRPC
+const MaxMessageSize = 1024 * 1024 * 12
+
 func main() {
 	projectPath := core.WorkingDir()
 	configPath := path.Join(core.UserHomeDir(),"PublishProject")
@@ -51,6 +54,7 @@ func main() {
 		core.PrintInRedAndPanic("This project type not yeat realized!")
 	}
 	}
+	core.PrintBlue("      image size: ", fmt.Sprintf("%v",len(request.DockerContent)))
 
 	uploadToServer(configPath, config.AriaServer, request)
 
@@ -67,14 +71,20 @@ func uploadToServer(configPath, ariaServer string, request *api.Request) {
 		core.PrintErrorAndPanic(fmt.Errorf("Failed to create TLS credentials %v", err))
 	}
 	grpcCredentials := grpc.WithTransportCredentials(creds)
-	conn, err := grpc.Dial(ariaServer, grpcCredentials)
+
+	conn, err := grpc.Dial(
+			ariaServer, 
+			grpcCredentials,
+			grpc.WithMaxMsgSize(MaxMessageSize),
+			grpc.WithTimeout(60*time.Second),
+		)
 	if err != nil {
 		core.PrintErrorAndPanic(fmt.Errorf("Failed to dial applications-server %v", err))
 	}
 	defer conn.Close()
 	client := api.NewPublishRequestClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 	response, err := client.Publish(ctx, request)
 	if err != nil {
@@ -84,6 +94,8 @@ func uploadToServer(configPath, ariaServer string, request *api.Request) {
 	if errorDescription != "" {
 		core.PrintInRedAndPanic("Error in applications-server: " + errorDescription)
 	}
+
+	println()
 	core.PrintBlue("   image version: ", response.GetImageVersion())
 }
 

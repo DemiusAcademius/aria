@@ -67,6 +67,6 @@ Param | Value
 
 ## Install aria services
 
-    scripts/install-aria.sh
+    sudo scripts/install-aria.sh
 
 ## Generate UUID on linux: uuidgen!

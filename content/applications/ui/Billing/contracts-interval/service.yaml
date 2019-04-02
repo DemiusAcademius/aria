@@ -7,9 +7,9 @@ metadata:
     aria.io/proxy-config: |
       listener: acc
       routes:
-      - match: { prefix: "/ui/contracts-interval/"}
+      - match: { prefix: "/ui/billing/contracts-interval/"}
         route: { prefix_rewrite: "/", timeout: normal }
-      - match: { prefix: "/ui/contracts-interval" }
+      - match: { prefix: "/ui/billing/contracts-interval" }
         redirect: { path_redirect: "/ui/contracts-interval/" }
 spec:
   selector:

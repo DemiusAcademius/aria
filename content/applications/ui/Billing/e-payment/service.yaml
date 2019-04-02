@@ -7,9 +7,9 @@ metadata:
     aria.io/proxy-config: |
       listener: acc
       routes:
-      - match: { prefix: "/ui/e-payment/"}
+      - match: { prefix: "/ui/billing/e-payment/"}
         route: { prefix_rewrite: "/", timeout: normal }
-      - match: { prefix: "/ui/e-payment" }
+      - match: { prefix: "/ui/billing/e-payment" }
         redirect: { path_redirect: "/ui/e-payment/" }
 spec:
   selector:

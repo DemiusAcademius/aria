@@ -79,6 +79,6 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 
 echo -e "${RED}OK${NC}"
 echo -e "${RED}SYSTEM WILL REBOOT NOW${NC}"
-echo -e "${RED}run scripts/install-after-reboot.sh${NC}"
+echo -e "${RED}run sudo scripts/install-after-reboot.sh${NC}"
 reboot
 
