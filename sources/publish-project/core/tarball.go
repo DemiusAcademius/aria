@@ -1,6 +1,7 @@
 package core
 
 import (
+	"strings"
 	"time"
 	"io/ioutil"
 	"archive/tar"
@@ -58,7 +59,7 @@ func CreateTarball(source string, dockerfile []byte) ([]byte, error) {
 		}
 
 		header := &tar.Header{
-			Name: filename,
+			Name: strings.Replace(filename,"\\","/",-1),
 			Size: datalen,
 			ModTime: f.ModTime(),
 		}

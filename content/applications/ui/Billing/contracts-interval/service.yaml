@@ -10,7 +10,7 @@ metadata:
       - match: { prefix: "/ui/billing/contracts-interval/"}
         route: { prefix_rewrite: "/", timeout: normal }
       - match: { prefix: "/ui/billing/contracts-interval" }
-        redirect: { path_redirect: "/ui/contracts-interval/" }
+        redirect: { path_redirect: "/ui/billing/contracts-interval/" }
 spec:
   selector:
     app: contracts-interval

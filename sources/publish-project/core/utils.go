@@ -39,6 +39,13 @@ func PrintBlue(label, text string) {
 	color.Blue(text)
 }
 
+// PrintBlueExtended print label bw and text in blue
+func PrintBlueExtended(label, text, ext string) {
+	print(label)
+	fmt.Fprint(color.Output, color.BlueString(text))
+	println(ext)
+}
+
 // PrintMagenta print label bw and text in blue
 func PrintMagenta(label, text string) {
 	print(label)

@@ -10,7 +10,7 @@ metadata:
       - match: { prefix: "/ui/billing/remote-indications/"}
         route: { prefix_rewrite: "/", timeout: normal }
       - match: { prefix: "/ui/billing/remote-indications" }
-        redirect: { path_redirect: "/ui/remote-indications/" }
+        redirect: { path_redirect: "/ui/billing/remote-indications/" }
 spec:
   selector:
     app: remote-indications

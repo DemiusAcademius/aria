@@ -28,11 +28,12 @@ docker run --entrypoint htpasswd registry:2 -Bbn kube-registry-user yf-ujhirt-cb
 chown root:root ./auth/htpasswd
 kubectl create -f manifests/docker-registry.yaml
 
-# connect k8s to registry
+# connect k8s to registry and create configmaps
 array=( kube-system admin billing finance utilities )
 for i in "${array[@]}"
 do
     kubectl create secret docker-registry regcred --docker-server=10.10.112.27:5000 --docker-username=kube-registry-user --docker-password=yf-ujhirt-cbltk-rjhjkm --docker-email=demius.md@gmail.com -n $i
+    kubectl create configmap nginx-conf --from-file=assets/nginx/default.conf -n $i
 done
 
 # find bearer token for login to dashboard

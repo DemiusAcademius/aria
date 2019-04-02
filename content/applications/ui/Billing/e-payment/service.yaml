@@ -10,7 +10,7 @@ metadata:
       - match: { prefix: "/ui/billing/e-payment/"}
         route: { prefix_rewrite: "/", timeout: normal }
       - match: { prefix: "/ui/billing/e-payment" }
-        redirect: { path_redirect: "/ui/e-payment/" }
+        redirect: { path_redirect: "/ui/billing/e-payment/" }
 spec:
   selector:
     app: e-payment

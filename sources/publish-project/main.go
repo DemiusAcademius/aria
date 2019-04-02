@@ -14,6 +14,7 @@ import (
 	"demius/publish-project/api"
 	"demius/publish-project/core"
 	"demius/publish-project/toolchains/dotnet"
+	"demius/publish-project/toolchains/ui"
 )
 
 // MaxMessageSize maximum message size of GRPC
@@ -47,14 +48,14 @@ func main() {
 	}
 
 	switch projectType {
-	case core.DotnetProjectType: {
+	case core.DotnetProjectType:
 		request.DockerContent = dotnet.Build(configPath, projectPath, projectName)
-	}
-	default: {
+	case core.WebUIProjectType:
+		request.DockerContent = ui.Build(configPath, projectPath)
+	default:
 		core.PrintInRedAndPanic("This project type not yeat realized!")
 	}
-	}
-	core.PrintBlue("      image size: ", fmt.Sprintf("%v",len(request.DockerContent)))
+	core.PrintBlueExtended("      image size: ", fmt.Sprintf("%v",len(request.DockerContent)), " bytes")
 
 	uploadToServer(configPath, config.AriaServer, request)
 

@@ -10,7 +10,7 @@ metadata:
       - match: { prefix: "/ui/billing/android-routes/"}
         route: { prefix_rewrite: "/", timeout: normal }
       - match: { prefix: "/ui/billing/android-routes" }
-        redirect: { path_redirect: "/ui/android-routes/" }
+        redirect: { path_redirect: "/ui/billing/android-routes/" }
 spec:
   selector:
     app: android-routes

@@ -6,6 +6,7 @@ metadata:
   labels:
     app: identity.api
     kind: aria-app
+    tier: backend
 spec:
   replicas: 1
   selector:

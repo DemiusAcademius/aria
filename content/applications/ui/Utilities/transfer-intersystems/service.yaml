@@ -10,7 +10,7 @@ metadata:
       - match: { prefix: "/ui/utilities/transfer-intersystems/"}
         route: { prefix_rewrite: "/", timeout: normal }
       - match: { prefix: "/ui/utilities/transfer-itnersystems"}
-        redirect: { path_redirect: "/ui/transfer-intersystems/" }
+        redirect: { path_redirect: "/ui/utilities/transfer-intersystems/" }
 spec:
   selector:
     app: transfer-intersystems

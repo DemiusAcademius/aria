@@ -10,7 +10,7 @@ metadata:
       - match: { prefix: "/ui/admin/identity/"}
         route: { prefix_rewrite: "/", timeout: normal }
       - match: { prefix: "/ui/admin/identity" }
-        redirect: { path_redirect: "/ui/identity/" }
+        redirect: { path_redirect: "/ui/admin/identity/" }
 spec:
   selector:
     app: identity
