@@ -53,7 +53,7 @@ Param | Value
 
 ## Post-install K8S
 
-    sudo scripts/post-install.sh
+    sudo scripts/install-after-reboot.sh
 
 ## Deploying official Dashboard UI
 
@@ -65,8 +65,8 @@ Param | Value
 
 > SEE: https://aria.acc.md:30931/
 
-## Generate applications manifests
+## Install aria services
 
-    scripts/sync-applications
+    scripts/install-aria.sh
 
 ## Generate UUID on linux: uuidgen!
