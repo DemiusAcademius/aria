@@ -55,6 +55,8 @@ func main() {
 	default:
 		core.PrintInRedAndPanic("This project type not yeat realized!")
 	}
+	
+	println()
 	core.PrintBlueExtended("      image size: ", fmt.Sprintf("%v",len(request.DockerContent)), " bytes")
 
 	uploadToServer(configPath, config.AriaServer, request)
