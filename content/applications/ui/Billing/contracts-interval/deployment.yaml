@@ -6,6 +6,7 @@ metadata:
   labels:
     app: contracts-interval
     kind: aria-app
+    tier: frontend
 spec:
   replicas: 1
   selector:

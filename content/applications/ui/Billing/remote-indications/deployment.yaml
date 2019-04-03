@@ -6,6 +6,7 @@ metadata:
   labels:
     app: remote-indications
     kind: aria-app
+    tier: frontend
 spec:
   replicas: 1
   selector:

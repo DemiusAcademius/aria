@@ -5,6 +5,7 @@ metadata:
   namespace: kube-system
   labels:
     app: aria-proxy
+    kind: aria-service
 spec:
   selector:
     matchLabels:

@@ -5,6 +5,7 @@ metadata:
   namespace: kube-system
   labels:
     app: aria-nginx
+    kind: aria-service
 spec:
   selector:
     matchLabels:
