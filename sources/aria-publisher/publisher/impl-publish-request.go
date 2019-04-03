@@ -1,6 +1,7 @@
 package publisher
 
 import (
+	"strconv"
 	"context"
 	"fmt"
 	"strings"
@@ -53,6 +54,8 @@ func (s *publisherServer) Publish(ctx context.Context, request *api.Request) (*a
 	}
 
 	newVersion := time.Now().Format("0601021504") // stdYear stdZeroMonth stdZeroDay stdHour stdZeroMinute
+	nvi,_ := strconv.Atoi(newVersion)
+	newVersion = strings.ToUpper( fmt.Sprintf(strconv.FormatInt(int64(nvi), 16)) )
 	newImageName := s.RegistryURL + "/" + request.ImageName + ":" + newVersion
 
 	switch request.Kind {
@@ -106,7 +109,7 @@ func (s *publisherServer) Publish(ctx context.Context, request *api.Request) (*a
 		}
 	}
 
-	return versionResponse(newVersion), nil
+	return versionResponse("0x" + newVersion), nil
 }
 
 func errorResponse(errorDesc string) *api.Response {

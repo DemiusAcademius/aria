@@ -23,7 +23,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: aria-publisher
-        image: 10.10.112.27:5000/aria-publisher:0.1.1
+        image: 10.10.112.27:5000/aria-publisher:0.1.3
         ports:
         - { name: grpc, containerPort: 9999, hostPort: 9999 }
         imagePullPolicy: IfNotPresent

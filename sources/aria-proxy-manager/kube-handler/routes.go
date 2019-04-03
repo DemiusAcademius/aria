@@ -77,7 +77,7 @@ func checkRoute(config *proxyconf.Route) bool {
 			return false
 		}
 	} else if config.Redirect != nil {
-		if config.Match.Prefix == "" || config.Match.Path == "" {
+		if config.Match.Prefix == "" && config.Match.Path == "" {
 			return false
 		}
 	} else {
@@ -107,6 +107,20 @@ func makeRoute(clusterName string, config *proxyconf.Route) env_route.Route {
 
 func makeRedirect(clusterName string, config *proxyconf.Route) env_route.Route {
 	var match env_route.RouteMatch
+
+	if config.Match.Prefix != "" {
+		match = env_route.RouteMatch{
+			PathSpecifier: &env_route.RouteMatch_Prefix{
+				Prefix: config.Match.Prefix,
+			},
+		}
+	} else {
+		match = env_route.RouteMatch{
+			PathSpecifier: &env_route.RouteMatch_Path{
+				Path: config.Match.Path,
+			},
+		}
+	}
 
 	return env_route.Route{
 		Match: match,
