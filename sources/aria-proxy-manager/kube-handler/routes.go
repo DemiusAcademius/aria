@@ -37,15 +37,19 @@ func MakeRoutes(services []QualifiedServiceInfo) []env_cache.Resource {
 		clusterName := srv.ServiceName + "." + srv.Namespace
 
 		for _, config := range srv.ProxyConfig.Routes {
+			if !checkRoute(&config) {
+				continue
+			}
 			idx := calcListenerIdx(srv.ProxyConfig.Listener)
 			if idx > -1 {
+				var route env_route.Route
 				if config.Route != nil {
-					routes[idx][curRoutes[idx]] = makeRoute(clusterName, &config)
-					curRoutes[idx]++
+					route = makeRoute(clusterName, &config)
 				} else if config.Redirect != nil {
-					routes[idx][curRoutes[idx]] = makeRedirect(clusterName, &config)
-					curRoutes[idx]++
+					route = makeRedirect(clusterName, &config)
 				}
+				routes[idx][curRoutes[idx]] = route
+				curRoutes[idx]++
 			}
 		}
 
@@ -67,6 +71,21 @@ func MakeRoutes(services []QualifiedServiceInfo) []env_cache.Resource {
 	return routeResources
 }
 
+func checkRoute(config *proxyconf.Route) bool {
+	if config.Route != nil {
+		if config.Match.Prefix == "" {
+			return false
+		}
+	} else if config.Redirect != nil {
+		if config.Match.Prefix == "" || config.Match.Path == "" {
+			return false
+		}
+	} else {
+		return false;
+	}
+	return true
+}
+
 func makeRoute(clusterName string, config *proxyconf.Route) env_route.Route {
 	duration := calcDuration(config.Route.Timeout)
 
@@ -83,16 +102,14 @@ func makeRoute(clusterName string, config *proxyconf.Route) env_route.Route {
 				Timeout:          &duration,
 			},
 		},
-	}	
+	}
 }
 
 func makeRedirect(clusterName string, config *proxyconf.Route) env_route.Route {
+	var match env_route.RouteMatch
+
 	return env_route.Route{
-		Match: env_route.RouteMatch{
-			PathSpecifier: &env_route.RouteMatch_Prefix{
-				Prefix: config.Match.Prefix,
-			},
-		},
+		Match: match,
 		Action: &env_route.Route_Redirect{
 			Redirect: &env_route.RedirectAction{
 				PathRewriteSpecifier: &env_route.RedirectAction_PathRedirect{
@@ -100,7 +117,7 @@ func makeRedirect(clusterName string, config *proxyconf.Route) env_route.Route {
 				},
 			},
 		},
-	}	
+	}
 }
 
 // first route is ACC, second route is IO

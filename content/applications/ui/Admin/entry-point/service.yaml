@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: entry-point
+  namespace: admin
+  annotations:
+    aria.io/proxy-config: |
+      listener: acc
+      routes:
+      - match: { prefix: "/ui/admin/entry-point/"}
+        route: { prefix_rewrite: "/", timeout: normal }
+      - match: { path: "/" }
+        redirect: { path_redirect: "/ui/admin/entry-point/" }
+      - match: { prefix: "/ui/admin/entry-point" }
+        redirect: { path_redirect: "/ui/admin/entry-point/" }
+spec:
+  selector:
+    app: entry-point
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 443

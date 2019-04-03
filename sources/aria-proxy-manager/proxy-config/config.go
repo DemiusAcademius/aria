@@ -21,6 +21,7 @@ type Route struct {
 
 // RouteMatch corresponds to envoy-proxy match clause
 type RouteMatch struct {
+	Path   string `yaml:"path"`
 	Prefix string `yaml:"prefix"`
 }
 

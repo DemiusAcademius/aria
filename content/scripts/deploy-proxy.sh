@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.1.2
+VERSION=0.1.3
 
 if $1 ; then
     kubectl delete daemonset aria-proxy -n kube-system
