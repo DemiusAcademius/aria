@@ -24,7 +24,7 @@
     flex-flow: row;
     align-items: center;
     justify-content: space-around;
-    background-color: #f6f6f6;
+    background-color: #f8f8f8;
     border-top: #d0d8e2 solid thin;
     border-bottom: #d0d8e2 solid thin;
   }
@@ -42,7 +42,7 @@
   
   .info {
     padding: 1em;
-    background-color: #fbfbfb;
+    background-color: #fcfcfc;
     color: gray;
     font-size: 90%;
     font-weight: bold;
@@ -60,6 +60,11 @@
   .bordered {
     border: #d0d8e2 solid thin;
     border-radius: 2px;  
+  }
+  
+  .border-rounded {
+    border: #d0d8e2 solid thin;
+    border-radius: 14px;  
   }
   
   label > em.in-label {

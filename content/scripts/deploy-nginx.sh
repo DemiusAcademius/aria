@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.1.0
+VERSION=0.1.6
 
 if $1 ; then
     kubectl delete service aria-nginx -n kube-system
