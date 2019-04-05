@@ -8,7 +8,7 @@ metadata:
       listener: acc
       routes:
       - match: { prefix: "/api/utilities/transfer-intersystems/"}
-        route: { prefix_rewrite: "/api", timeout: long }
+        route: { prefix_rewrite: "/api/", timeout: long }
 spec:
   selector:
     app: transfer-intersystems.api

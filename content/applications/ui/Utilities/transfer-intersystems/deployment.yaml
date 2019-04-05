@@ -27,8 +27,11 @@ spec:
         - { name: TZ, value: Europe/Chisinau }
         volumeMounts:
         - { name: certs, mountPath: /certs, readOnly: true }
+        - { name: nginx-conf, mountPath: /etc/nginx/conf.d }
       volumes:
       - name: certs
         hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+      - name: nginx-conf
+        configMap: { name: nginx-conf }
       imagePullSecrets:
       - name: regcred
