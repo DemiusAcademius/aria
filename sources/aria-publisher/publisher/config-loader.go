@@ -8,8 +8,8 @@ import (
 
 // ServiceConfig config for image-builder
 type ServiceConfig struct {
-	CertFile       string `env:"CERT_FILE" default:"/certs/acc.io/acc.io.crt"`
-	KeyFile        string `env:"KEY_FILE" default:"/certs/acc.io/acc.io.key"`
+	CertFile       string `env:"CERT_FILE" default:"/certs/acc.io.crt"`
+	KeyFile        string `env:"KEY_FILE" default:"/certs/acc.io.key"`
 	ServerPort     string `env:"PORT" default:"9999"`
 	RegistryURL    string `env:"REGISTRY_URL" default:"10.10.112.27:5000"`	
 }

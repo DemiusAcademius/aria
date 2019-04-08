@@ -24,13 +24,13 @@ type certKeysPath struct {
 
 // Certificates for internal IO
 var accKeys = certKeysPath{
-	CertificateChain: "/certs/acc.md/acc.md.crt",
-	PrivateKey:       "/certs/acc.md/acc.md.key",
+	CertificateChain: "/certs/acc.md.crt",
+	PrivateKey:       "/certs/acc.md.key",
 }
 
 var ioKeys = certKeysPath{
-	CertificateChain: "/certs/acc.io/acc.io.crt",
-	PrivateKey:       "/certs/acc.io/acc.io.key",
+	CertificateChain: "/certs/acc.io.crt",
+	PrivateKey:       "/certs/acc.io.key",
 }
 
 // MakeEndpoint creates a localhost endpoint on a given port.
