@@ -26,8 +26,5 @@ echo ""
 echo -e "${BLUE}Sync applications${NC}"
 scripts/sync-applications
 
-# deploy redis
-kubectl create -f manifests/aria-redis.yaml
-
 echo ""
 echo -e "${RED}ARIA INSTALLED${NC}"

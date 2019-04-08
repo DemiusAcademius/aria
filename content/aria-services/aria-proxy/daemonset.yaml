@@ -32,14 +32,14 @@ spec:
         env:
         - { name: TZ, value: Europe/Chisinau }
         volumeMounts:
-        - { name: certs, mountPath: /certs, readOnly: true }
+        - { name: certs, mountPath: /certs }
       - name: aria-proxy-manager
         image: 10.10.112.27:5000/aria-proxy-manager:0.1.4
         imagePullPolicy: IfNotPresent
       dnsPolicy: Default
       volumes:
       - name: certs
-        hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+        secret: { secretName: acc-certs }
       serviceAccountName: aria-services-account
       imagePullSecrets:
       - name: regcred

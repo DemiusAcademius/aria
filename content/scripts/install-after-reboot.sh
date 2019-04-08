@@ -32,6 +32,8 @@ kubectl create -f manifests/docker-registry.yaml
 array=( kube-system admin billing finance utilities )
 for i in "${array[@]}"
 do
+    kubectl create secret generic acc-certs --from-file=$HOME/certs/acc.io -n $i
+    kubectl create secret generic auth-token-secret --from-file=$HOME/assets/asp.net/auth-token-secret -n $i
     kubectl create secret docker-registry regcred --docker-server=10.10.112.27:5000 --docker-username=kube-registry-user --docker-password=yf-ujhirt-cbltk-rjhjkm --docker-email=demius.md@gmail.com -n $i
     kubectl create configmap nginx-conf --from-file=assets/nginx/default.conf -n $i
 done

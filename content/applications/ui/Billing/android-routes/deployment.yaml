@@ -23,12 +23,13 @@ spec:
         image: android-routes.ui.billing
         ports:
         - containerPort: 443
-        env:
-        - { name: TZ, value: Europe/Chisinau }
         volumeMounts:
-        - { name: certs, mountPath: /certs, readOnly: true }
+        - { name: certs, mountPath: /certs }
+        - { name: nginx-conf, mountPath: /etc/nginx/conf.d }
       volumes:
       - name: certs
-        hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+        secret: { secretName: acc-certs }
+      - name: nginx-conf
+        configMap: { name: nginx-conf }
       imagePullSecrets:
       - name: regcred

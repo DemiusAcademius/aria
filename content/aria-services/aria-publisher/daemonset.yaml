@@ -31,7 +31,7 @@ spec:
         - { name: TZ, value: Europe/Chisinau }
         volumeMounts:
         - { name: auth, mountPath: /auth, readOnly: true }
-        - { name: certs, mountPath: /certs, readOnly: true }
+        - { name: certs, mountPath: /certs }
         - { name: docker-socket-volume, mountPath: /var/run/docker.sock }
         securityContext:
           privileged: true        
@@ -40,7 +40,7 @@ spec:
       - name: auth
         hostPath: { path: /home/acc-server-admin/auth, type: Directory }
       - name: certs
-        hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+        secret: { secretName: acc-certs }
       - name: docker-socket-volume
         hostPath: { path: /var/run/docker.sock, type: File }
       serviceAccountName: aria-services-account

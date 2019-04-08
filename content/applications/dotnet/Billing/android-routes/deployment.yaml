@@ -21,14 +21,15 @@ spec:
       containers:
       - name: android-routes-api
         image: android-routes.api.billing
-        ports:
-        - containerPort: 443
         env:
         - { name: TZ, value: Europe/Chisinau }
+        - { name: AUTH-TOKEN-KEY, valueFrom: { secretKeyRef: { name: auth-token-secret, key: auth-token-secret } } }
+        ports:
+        - containerPort: 443
         volumeMounts:
-        - { name: certs, mountPath: /certs, readOnly: true }
+        - { name: certs, mountPath: /certs }
       volumes:
       - name: certs
-        hostPath: { path: /home/acc-server-admin/certs, readOnly: true }
+        secret: { secretName: acc-certs }
       imagePullSecrets:
       - name: regcred

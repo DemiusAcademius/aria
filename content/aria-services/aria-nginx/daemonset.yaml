@@ -23,15 +23,15 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: aria-nginx
-        image: 10.10.112.27:5000/aria-nginx:0.1.8
+        image: 10.10.112.27:5000/aria-nginx:0.1.9
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 443
         volumeMounts:
-        - { name: certs , mountPath: /certs, readOnly: true }
+        - { name: certs , mountPath: /certs }
       dnsPolicy: Default
       volumes:
       - name: certs
-        hostPath: { path: /home/acc-server-admin/certs, type: Directory }
+        secret: { secretName: acc-certs }
       imagePullSecrets:
       - name: regcred
