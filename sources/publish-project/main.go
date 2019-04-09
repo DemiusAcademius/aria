@@ -25,6 +25,7 @@ func main() {
 	configPath := path.Join(core.UserHomeDir(),"PublishProject")
 	core.PrintBlue("     config path: " , configPath)
 	config := core.LoadConfig(path.Join(configPath, "aria-config.yaml"))
+	core.PrintBlue("     aria-server: " , config.AriaServer)
 
 	filepath.Walk(core.WorkingDir(), func(projectPath string, f os.FileInfo, err error) error {
 		if err != nil {
@@ -60,7 +61,6 @@ func publishProject(config *core.Config, configPath, projectPath, artifactConfig
 
 	artifactKind := core.ConvertArtifactKind(artifactConfig.ArtifactKind)
 
-	core.PrintBlue("     aria-server: " , config.AriaServer)
 	core.PrintBlue("            tier: " , artifactConfig.Tier)
 
 	projectName := filepath.Base(projectPath)
