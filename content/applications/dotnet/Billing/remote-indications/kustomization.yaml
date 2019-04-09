@@ -1,0 +1,6 @@
+tier: api
+ns: billing
+name: remote-indications
+kind: deployment
+service:
+  listener: acc
