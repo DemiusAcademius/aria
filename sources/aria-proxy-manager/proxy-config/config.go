@@ -9,13 +9,14 @@ import (
 // Config contains config for envoy-proxy
 type Config struct {
 	Listener string  `yaml:"listener"`
+	Default  bool    `yaml:"default"`
 	Routes   []Route `yaml:"routes"`
 }
 
 // Route contains single route entry
 type Route struct {
-	Match RouteMatch  `yaml:"match"`
-	Route *RouteAction `yaml:"route"`
+	Match    RouteMatch      `yaml:"match"`
+	Route    *RouteAction    `yaml:"route"`
 	Redirect *RedirectAction `yaml:"redirect"`
 }
 

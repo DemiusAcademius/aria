@@ -25,15 +25,6 @@ go get k8s.io/apimachinery@kubernetes-1.13.4 # replace kubernetes-1.13.4 with th
 
 */
 
-const (
-	// CronJobFile contains k8s manifest for cronjob resource
-	CronJobFile = "cronjob.yaml"
-	// DeploymentFile contains k8s manifest for deployment resource
-	DeploymentFile = "deployment.yaml"
-	// ServiceFile contains k8s manifest for service resource
-	ServiceFile = "service.yaml"
-)
-
 func main() {
 	executablePath := utils.ExecutableDir()
 	homePath := utils.UserHomeDir()
@@ -43,8 +34,15 @@ func main() {
 	clientset := handler.Connect(homePath)
 
 	source := filepath.Join(homePath, "applications")
+	base := filepath.Join(source, "base")
 
-	if err := walkApplications(source, clientset); err != nil {
+	templates, err := utils.LoadTemplates(base)
+	if err != nil {
+		color.Red(fmt.Sprintf("%s", err))
+		return
+	}
+
+	if err := walkApplications(source, base, templates, clientset); err != nil {
 		color.Red(fmt.Sprintf("%s", err))
 		return
 	}
@@ -52,7 +50,7 @@ func main() {
 	color.HiCyan("OK")
 }
 
-func walkApplications(source string, clientset *kubernetes.Clientset) error {
+func walkApplications(source, base string, templates utils.Templates, clientset *kubernetes.Clientset) error {
 	prefixLen := len(source) + 1
 
 	return filepath.Walk(source, func(path string, f os.FileInfo, err error) error {
@@ -62,31 +60,58 @@ func walkApplications(source string, clientset *kubernetes.Clientset) error {
 		if f.IsDir() {
 			return nil
 		}
-		
-		filename := filepath.Base(path)
-		if !strings.HasSuffix(filename, ".yaml") {
+
+		if strings.HasPrefix(path, base) {
 			return nil
 		}
-		if filename == CronJobFile || filename == DeploymentFile || filename == ServiceFile {
-			printArtifactPath(prefixLen, path, filename)
+		
+		filename := filepath.Base(path)
+		if filename != "kustomization.yaml" {
+			return nil
+		}
 
-			filedata, err := ioutil.ReadFile(path)
+		printArtifactPath(prefixLen, path, filename)
+		filedata, err := ioutil.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		kustomization, err := utils.ParseKustomization(filedata)
+		if err != nil {
+			return err
+		}
+
+		// TODO: apply kustomization to templates
+		if kustomization.Kind == "cronjob" {
+			tmpl := templates[utils.CronJobKind][""]
+			manifest, err := utils.KustomizeCronJob(kustomization, tmpl)
 			if err != nil {
 				return err
 			}
-			var mt handler.ManifestType
-			switch filename {
-			case CronJobFile: mt = handler.CronJobManifest
-			case DeploymentFile: mt = handler.DeploymentManifest
-			case ServiceFile: mt = handler.ServiceManifest
-			default: {
-				print(color.HiBlackString("      unknown resource type\n"))
-				return nil
-			}
-					}
-			if err = handler.ApplyManifest(clientset, filedata, mt); err != nil {
+			if err = handler.ApplyManifest(clientset, manifest, handler.CronJobManifest); err != nil {
 				return err
 			}
+		} else if kustomization.Kind == "deployment" {
+			deploymentTmpl := templates[utils.DeploymentKind][kustomization.Tier]
+			deploymentMt, err := utils.KustomizeDeployment(kustomization, deploymentTmpl)
+			if err != nil {
+				return err
+			}
+			if err = handler.ApplyManifest(clientset, deploymentMt, handler.DeploymentManifest); err != nil {
+				return err
+			}
+
+			serviceTmpl := templates[utils.ServiceKind][kustomization.Tier]
+			serviceMt, err := utils.KustomizeDeployment(kustomization, serviceTmpl)
+			if err != nil {
+				return err
+			}
+			if err = handler.ApplyManifest(clientset, serviceMt, handler.ServiceManifest); err != nil {
+				return err
+			}
+		} else {
+			print(color.HiBlackString("      unknown kind\n"))
+			return nil
 		}
 
 		return nil

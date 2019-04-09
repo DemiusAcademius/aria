@@ -17,7 +17,7 @@ type ArtifactConfig struct {
 	Namespace       string `yaml:"namespace"`
 	ApplicationName string `yaml:"app-name"`
 	ArtifactKind    string `yaml:"kind"`
-	ImageName       string `yaml:"image-name"`
+	Tier            string `yaml:"tier"`
 }
 
 // LoadConfig from specified filepath

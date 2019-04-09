@@ -1,0 +1,6 @@
+tier: api
+ns: utilities
+name: transfer-intersystems
+kind: deployment
+service:
+  listener: acc

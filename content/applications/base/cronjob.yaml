@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{.Name}}
+  namespace: {{.Ns}}
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "{{.Schedule}}"
+  jobTemplate:    
+    spec:
+      ttlSecondsAfterFinished: 900
+      template:
+        spec:
+          containers:
+          - name: {{.Name}}
+            image: {{.Name}}.{{.Ns}}
+            env:
+            - { name: TZ, value: Europe/Chisinau }
+          restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: regcred

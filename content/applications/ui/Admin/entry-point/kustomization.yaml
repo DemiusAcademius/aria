@@ -1,0 +1,7 @@
+tier: ui
+ns: admin
+name: entry-point
+kind: deployment
+service:
+  listener: acc
+  default: true

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Name}}.ui
+  namespace: {{.Ns}}
+  labels:
+    aria-app: {{.Name}}.ui
+    tier: ui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      aria-app: {{.Name}}.ui
+      tier: ui
+  template:
+    metadata:
+      labels:
+        aria-app: {{.Name}}.ui
+        tier: ui
+    spec:
+      containers:
+      - name: {{.Name}}-ui
+        image: {{.Name}}.ui.{{.Ns}}
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - { name: certs, mountPath: /certs }
+        - { name: nginx-conf, mountPath: /etc/nginx/conf.d }
+      volumes:
+      - name: certs
+        secret: { secretName: acc-certs }
+      - name: nginx-conf
+        configMap: { name: nginx-conf }
+      imagePullSecrets:
+      - name: regcred

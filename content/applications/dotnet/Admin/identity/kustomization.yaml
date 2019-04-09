@@ -1,0 +1,6 @@
+tier: api
+ns: admin
+name: identity
+kind: deployment
+service:
+  listener: acc

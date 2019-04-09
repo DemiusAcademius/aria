@@ -34,22 +34,29 @@ func MakeRoutes(services []QualifiedServiceInfo) []env_cache.Resource {
 	}
 
 	for _, srv := range services {
+		idx := calcListenerIdx(srv.ProxyConfig.Listener)
+		if idx == -1 {
+			continue
+		}
 		clusterName := srv.ServiceName + "." + srv.Namespace
 
 		for _, config := range srv.ProxyConfig.Routes {
 			if !checkRoute(&config) {
 				continue
 			}
-			idx := calcListenerIdx(srv.ProxyConfig.Listener)
-			if idx > -1 {
-				var route env_route.Route
-				if config.Route != nil {
-					route = makeRoute(clusterName, &config)
-				} else if config.Redirect != nil {
-					route = makeRedirect(clusterName, &config)
-				}
+			var route env_route.Route
+			if config.Route != nil {
+				route = makeRoute(clusterName, &config)
+			} else if config.Redirect != nil {
+				route = makeRedirect(clusterName, &config)
+			}
+			routes[idx][curRoutes[idx]] = route
+			curRoutes[idx]++
+
+			if srv.ProxyConfig.Default && config.Redirect != nil {
+				route = makeDefaultRedirect(clusterName, &config)
 				routes[idx][curRoutes[idx]] = route
-				curRoutes[idx]++
+				curRoutes[idx]++	
 			}
 		}
 
@@ -134,6 +141,24 @@ func makeRedirect(clusterName string, config *proxyconf.Route) env_route.Route {
 	}
 }
 
+// redirect from '/' (default)  to real path
+func makeDefaultRedirect(clusterName string, config *proxyconf.Route) env_route.Route {
+	return env_route.Route{
+		Match: env_route.RouteMatch{
+			PathSpecifier: &env_route.RouteMatch_Path{
+				Path: "/",
+			},
+		},
+		Action: &env_route.Route_Redirect{
+			Redirect: &env_route.RedirectAction{
+				PathRewriteSpecifier: &env_route.RedirectAction_PathRedirect{
+					PathRedirect: config.Redirect.PathRedirect,
+				},
+			},
+		},
+	}
+}
+
 // first route is ACC, second route is IO
 func calcRoutesCnt(services []QualifiedServiceInfo) []int {
 	var cnt = []int{0, 0}
@@ -141,6 +166,9 @@ func calcRoutesCnt(services []QualifiedServiceInfo) []int {
 		idx := calcListenerIdx(srv.ProxyConfig.Listener)
 		if idx > -1 {
 			cnt[idx] += len(srv.ProxyConfig.Routes)
+			if srv.ProxyConfig.Default {
+				cnt[idx] ++
+			}
 		}
 	}
 	return cnt

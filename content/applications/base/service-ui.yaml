@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{.Name}}
+  namespace: {{.Ns}}
+  annotations:
+    aria.io/proxy-config: |
+      listener: {{.Listener}}
+      default: {{.Default}}
+      routes:
+      - match: { prefix: "/ui/{{.Ns}}/{{.Name}}/"}
+        route: { prefix_rewrite: "/", timeout: normal }
+      - match: { prefix: "/ui/{{.Ns}}/{{.Name}}" }
+        redirect: { path_redirect: "/ui/{{.Ns}}/{{.Name}}/" }
+spec:
+  selector:
+    aria-app: {{.Name}}.ui
+    tier: ui
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 443

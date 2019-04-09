@@ -1,0 +1,7 @@
+tier: ui
+ns: admin
+name: identity
+kind: deployment
+service:
+  listener: acc
+  default: false

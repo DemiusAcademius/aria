@@ -1,0 +1,7 @@
+tier: ui
+ns: utilities
+name: transfer-intersystems
+kind: deployment
+service:
+  listener: acc
+  default: false

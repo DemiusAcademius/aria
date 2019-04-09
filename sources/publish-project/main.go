@@ -32,7 +32,7 @@ func main() {
 	artifactKind := core.ConvertArtifactKind(artifactConfig.ArtifactKind)
 
 	core.PrintBlue("     aria-server: " , config.AriaServer)
-	core.PrintBlue("       imagename: " , artifactConfig.ImageName)
+	core.PrintBlue("            tier: " , artifactConfig.Tier)
 
 	projectName := filepath.Base(projectPath)
 
@@ -44,7 +44,7 @@ func main() {
 		Name: artifactConfig.ApplicationName,
 		Kind: artifactKind,
 		Namespace: artifactConfig.Namespace,
-		ImageName: artifactConfig.ImageName,
+		Tier: artifactConfig.Tier,
 	}
 
 	switch projectType {
@@ -93,6 +93,9 @@ func uploadToServer(configPath, ariaServer string, request *api.Request) {
 	if err != nil {
 		core.PrintErrorAndPanic(fmt.Errorf("Upload to server error: %v", err))
 	}
+
+	core.PrintBlue("      image name: ", response.ImageName)
+
 	errorDescription := response.GetErrorDescription()
 	if errorDescription != "" {
 		core.PrintInRedAndPanic("Error in applications-server: " + errorDescription)
