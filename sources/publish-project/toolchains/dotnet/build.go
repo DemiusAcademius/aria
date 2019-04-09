@@ -49,6 +49,8 @@ func Build(configPath, projectPath, projectName string) []byte {
 	color.Magenta("DOTNET PUBLISH")
 
 	cmd := exec.Command("dotnet", "publish", "-c", "Release")
+	cmd.Dir = projectPath
+	
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()

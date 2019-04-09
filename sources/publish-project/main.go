@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"time"
 	"context"
 	"fmt"
@@ -21,13 +22,41 @@ import (
 const MaxMessageSize = 1024 * 1024 * 12
 
 func main() {
-	projectPath := core.WorkingDir()
 	configPath := path.Join(core.UserHomeDir(),"PublishProject")
 	core.PrintBlue("     config path: " , configPath)
+	config := core.LoadConfig(path.Join(configPath, "aria-config.yaml"))
+
+	filepath.Walk(core.WorkingDir(), func(projectPath string, f os.FileInfo, err error) error {
+		if err != nil {
+			core.PrintErrorAndPanic(fmt.Errorf("error walk dir %s: %v", projectPath, err))
+		}
+
+		if !f.IsDir() {
+			return nil
+		}
+
+		isProjectFolder, artifactConfigPath := detectProjectFolder(projectPath)
+		if isProjectFolder {
+			publishProject(config, configPath, projectPath, artifactConfigPath)
+		}
+
+		return nil
+	})
+}
+
+func detectProjectFolder(projectPath string) (bool,string) {
+	artifactConfigPath := path.Join(projectPath, "artifact-config.yaml")
+	if core.FileExists(artifactConfigPath) {
+        return true, artifactConfigPath
+    }
+	return false, ""
+}
+
+func publishProject(config *core.Config, configPath, projectPath, artifactConfigPath string) {
+	println()
 	core.PrintBlue("    project path: " , projectPath)
 
-	config := core.LoadConfig(path.Join(configPath, "aria-config.yaml"))
-	artifactConfig := core.LoadArtifactConfig(path.Join(projectPath, "artifact-config.yaml"))
+	artifactConfig := core.LoadArtifactConfig(artifactConfigPath)
 
 	artifactKind := core.ConvertArtifactKind(artifactConfig.ArtifactKind)
 
@@ -53,7 +82,8 @@ func main() {
 	case core.WebUIProjectType:
 		request.DockerContent = ui.Build(configPath, projectPath)
 	default:
-		core.PrintInRedAndPanic("This project type not yeat realized!")
+		color.Red("     This project type not yeat realized!")
+		return
 	}
 	
 	println()

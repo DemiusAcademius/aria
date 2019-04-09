@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"strings"
+	"bufio"
 	"text/template"
 	"os"
 	"fmt"
@@ -25,6 +27,8 @@ func Build(configPath, projectPath string, projectName string) []byte {
 	color.Magenta("GRADLE BUILD")
 
 	cmd := exec.Command("gradle", "build")
+	cmd.Dir = projectPath
+	
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
@@ -37,13 +41,11 @@ func Build(configPath, projectPath string, projectName string) []byte {
 	println()
 	core.PrintBlue("      build path: " , publishPath)
 
-	// TODO: analize build.gradle, read version
+	buildVersion := extractVersion(path.Join(projectPath, "build.gradle"))
+	core.PrintBlue("   build version: " , buildVersion)
 
 	println()
 	color.Magenta("GENERATE TARBALL")
-
-	// TODO: add build version to Dockerfile params
-	buildVersion := "1.1"
 
 	dockerfile := generateDockerfile(configPath, projectName, buildVersion)
 	tarBuffer, err := core.CreateTarball(publishPath, dockerfile)
@@ -77,4 +79,27 @@ func generateDockerfile(configPath, projectName, buildVersion string) []byte {
 		core.PrintErrorAndPanic(fmt.Errorf("can not apply variables to Dockerfile template: %v", err))
 	}
 	return dockerfileBuffer.Bytes()
+}
+
+func extractVersion(gradlefilePath string) string {
+	fp, err := os.Open(gradlefilePath)
+	if err != nil {
+		core.PrintErrorAndPanic(fmt.Errorf("can not open file %s: %v", gradlefilePath, err))
+	}
+	defer fp.Close()
+
+	scanner := bufio.NewScanner(fp)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line,"version") {
+			versionString := strings.Split(line," ")[1]
+			return versionString[1:len(versionString)-2]
+		}
+    }
+
+    if err := scanner.Err(); err != nil {
+        core.PrintErrorAndPanic(fmt.Errorf("can not read file %s: %v", gradlefilePath, err))
+	}
+	
+	return "1.0"
 }

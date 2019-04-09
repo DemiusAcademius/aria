@@ -19,6 +19,8 @@ func Build(configPath, projectPath string) []byte {
 	color.Magenta("YARN BUILD")
 
 	cmd := exec.Command("yarn", "build")
+	cmd.Dir = projectPath
+	
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
