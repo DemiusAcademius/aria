@@ -94,6 +94,7 @@ func uploadToServer(configPath, ariaServer string, request *api.Request) {
 		core.PrintErrorAndPanic(fmt.Errorf("Upload to server error: %v", err))
 	}
 
+	println()
 	core.PrintBlue("      image name: ", response.ImageName)
 
 	errorDescription := response.GetErrorDescription()
@@ -101,7 +102,6 @@ func uploadToServer(configPath, ariaServer string, request *api.Request) {
 		core.PrintInRedAndPanic("Error in applications-server: " + errorDescription)
 	}
 
-	println()
 	core.PrintBlue("   image version: ", response.GetImageVersion())
 }
 

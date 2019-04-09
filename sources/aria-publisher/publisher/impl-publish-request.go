@@ -92,7 +92,7 @@ func (s *publisherServer) Publish(ctx context.Context, request *api.Request) (*a
 			appsAPI := s.Clientset.AppsV1()
 			apiDeployments := appsAPI.Deployments(request.Namespace)
 
-			deployment, err := apiDeployments.Get(request.Name, kubemeta.GetOptions{})
+			deployment, err := apiDeployments.Get(request.Name + "." + request.Tier, kubemeta.GetOptions{})
 			if err != nil {
 				return resp_error(response, fmt.Sprintf("Could not get deployment `%s`, got error '%s'\n", request.Name, err.Error())), nil
 			}

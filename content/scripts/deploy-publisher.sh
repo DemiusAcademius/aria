@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.1.4
+VERSION=0.1.5
 
 if $1 ; then
     kubectl delete daemonset aria-publisher -n kube-system

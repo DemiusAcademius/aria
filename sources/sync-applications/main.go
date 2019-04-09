@@ -102,7 +102,7 @@ func walkApplications(source, base string, templates utils.Templates, clientset 
 			}
 
 			serviceTmpl := templates[utils.ServiceKind][kustomization.Tier]
-			serviceMt, err := utils.KustomizeDeployment(kustomization, serviceTmpl)
+			serviceMt, err := utils.KustomizeService(kustomization, serviceTmpl)
 			if err != nil {
 				return err
 			}
