@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{.Name}}.ui
-  namespace: {{.Ns}}
+  name: {{ .Name }}.ui
+  namespace: {{ .Ns }}
   labels:
-    aria-app: {{.Name}}.ui
+    aria-app: {{ .Name }}.ui
     tier: ui
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      aria-app: {{.Name}}.ui
+      aria-app: {{ .Name }}.ui
       tier: ui
   template:
     metadata:
       labels:
-        aria-app: {{.Name}}.ui
+        aria-app: {{ .Name }}.ui
         tier: ui
     spec:
       containers:
-      - name: {{.Name}}-ui
-        image: {{.Name}}.ui.{{.Ns}}
+      - name: {{ .Name }}-ui
+        image: {{ .Name }}.ui.{{ .Ns }}
         ports:
         - containerPort: 443
         volumeMounts:

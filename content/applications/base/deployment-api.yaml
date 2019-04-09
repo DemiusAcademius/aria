@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{.Name}}.api
-  namespace: {{.Ns}}
+  name: {{ .Name }}.api
+  namespace: {{ .Ns }}
   labels:
-    aria-app: {{.Name}}.api
+    aria-app: {{ .Name }}.api
     tier: api
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      aria-app: {{.Name}}.api
+      aria-app: {{ .Name }}.api
       tier: api
   template:
     metadata:
       labels:
-        aria-app: {{.Name}}.api
+        aria-app: {{ .Name }}.api
         tier: api
     spec:
       containers:
-      - name: {{.Name}}-api
-        image: {{.Name}}.api.{{.Ns}}
+      - name: {{ .Name }}-api
+        image: {{ .Name }}.api.{{ .Ns }}
         env:
         - { name: TZ, value: Europe/Chisinau }
         - { name: AUTH-TOKEN-KEY, valueFrom: { secretKeyRef: { name: auth-token-secret, key: auth-token-secret } } }

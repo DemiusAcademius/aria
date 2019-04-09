@@ -1,18 +1,61 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: monitoring-aria-endpoints
+rules:
+- apiGroups: [""]
+  resources: ["services", "endpoints"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: update-aria-resources
+rules:
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list"]
+- apiGroups: ["extensions", "apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "patch","update"]
+- apiGroups: ["batch", "extensions"]
+  resources: ["jobs","cronjobs"]
+  verbs: ["get", "list", "patch","update"]
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: aria-services-account
+  name: proxy-manager-account
+  namespace: kube-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aria-publisher-account
   namespace: kube-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: aria-services-account-role-binding
+  name: proxy-manager-account-role-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: monitoring-aria-endpoints
 subjects:
 - kind: ServiceAccount
-  name: aria-services-account
+  name: proxy-manager-account
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: aria-publisher-account-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: update-aria-resources
+subjects:
+- kind: ServiceAccount
+  name: aria-publisher-account
   namespace: kube-system

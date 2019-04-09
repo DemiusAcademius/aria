@@ -43,6 +43,6 @@ spec:
         secret: { secretName: acc-certs }
       - name: docker-socket-volume
         hostPath: { path: /var/run/docker.sock, type: File }
-      serviceAccountName: aria-services-account
+      serviceAccountName: aria-publisher-account
       imagePullSecrets:
       - name: regcred

@@ -40,6 +40,6 @@ spec:
       volumes:
       - name: certs
         secret: { secretName: acc-certs }
-      serviceAccountName: aria-services-account
+      serviceAccountName: proxy-manager-account
       imagePullSecrets:
       - name: regcred
