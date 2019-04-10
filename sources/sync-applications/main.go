@@ -123,6 +123,5 @@ func printArtifactPath(prefixLen int, path, filename string) {
 	print(color.HiBlackString("sync: "))
 	fmt.Printf("%s", strippedPath)
 	print(color.HiBlackString(" / "))
-	print(color.GreenString("%s", filename[:len(filename)-5]))
-	println(color.HiBlackString(" .yaml"))
+	println(color.HiBlackString("%s", filename))
 }

@@ -53,7 +53,6 @@ const (
 func ApplyManifest(clientset *kubernetes.Clientset, manifest []byte, manifestType ManifestType) error {
 	decoder := k8sYaml.NewYAMLOrJSONDecoder(bytes.NewReader(manifest), 1000)
 
-	print(color.HiBlackString("      decoded: "))
 	switch manifestType {
 	case CronJobManifest:
 		return applyCronjob(clientset, decoder)
@@ -68,16 +67,12 @@ func ApplyManifest(clientset *kubernetes.Clientset, manifest []byte, manifestTyp
 
 func applyCronjob(clientset *kubernetes.Clientset, decoder *k8sYaml.YAMLOrJSONDecoder) error {
 	j := &apibatch.CronJob{}
+
 	if err := decoder.Decode(&j); err != nil {
 		return err
 	}
-	fmt.Printf("%s", j.Name)
-	print(color.HiBlackString(".%s\n", j.Namespace))
-	
-	containers := j.Spec.JobTemplate.Spec.Template.Spec.Containers
-	for _, container := range containers {
-		print(color.HiBlackString("        image: %s\n", container.Image))
-	}		
+		
+	decodedArtifact("      cronjob: ", j.Name, j.Namespace)
 
 	batchAPI := clientset.BatchV1beta1()
 	apiJobs := batchAPI.CronJobs(j.Namespace)
@@ -98,16 +93,12 @@ func applyCronjob(clientset *kubernetes.Clientset, decoder *k8sYaml.YAMLOrJSONDe
 
 func applyDeployment(clientset *kubernetes.Clientset, decoder *k8sYaml.YAMLOrJSONDecoder) error {
 	d := &appsv1.Deployment{}
+
 	if err := decoder.Decode(&d); err != nil {
 		return err
 	}
-	fmt.Printf("%s", d.Name)
-	println(color.HiBlackString(".%s", d.Namespace))
 
-	containers := d.Spec.Template.Spec.Containers
-	for _, container := range containers {
-		println(color.HiBlackString("        image: %s", container.Image))
-	}	
+	decodedArtifact("   deployment: ", d.Name, d.Namespace)
 
 	appsAPI := clientset.AppsV1()
 	apiDeployments := appsAPI.Deployments(d.Namespace)
@@ -127,16 +118,13 @@ func applyDeployment(clientset *kubernetes.Clientset, decoder *k8sYaml.YAMLOrJSO
 
 func applyService(clientset *kubernetes.Clientset, decoder *k8sYaml.YAMLOrJSONDecoder) error {
 	s := &apiv1.Service{}
+
 	if err := decoder.Decode(&s); err != nil {
 		return err
 	}
-	fmt.Printf("%s", s.Name)
-	print(color.HiBlackString(".%s\n", s.Namespace))
-	
-	if _, ok := s.ObjectMeta.Annotations["aria.io/proxy-config"]; ok {				
-		print(color.HiBlackString("   annotation: aria.io/proxy-config\n"))
-	}
 
+	decodedArtifact("      service: ", s.Name, s.Namespace)
+	
 	api := clientset.CoreV1()
 	apiServices := api.Services(s.Namespace)
 	if _, err := apiServices.Get(s.Name, metav1.GetOptions{}); err != nil {
@@ -152,10 +140,17 @@ func applyService(clientset *kubernetes.Clientset, decoder *k8sYaml.YAMLOrJSONDe
 	return nil
 }
 
+func decodedArtifact(artifact, name, namespace string) {
+	print(color.HiBlackString(artifact))
+	fmt.Printf("%s", name)
+	println(color.HiBlackString(".%s", namespace))
+
+}
+
 func allreadyExists() {
-	println(color.YellowString("        allready exists"))
+	println(color.YellowString("     allready exists"))
 }
 
 func created() {
-	println(color.YellowString("        created"))
+	println(color.GreenString("     created"))
 }
