@@ -1,0 +1,7 @@
+tier: ui
+ns: billing
+name: contracts-interval
+kind: deployment
+service:
+  listener: acc
+  default: false
