@@ -152,5 +152,5 @@ func allreadyExists() {
 }
 
 func created() {
-	println(color.GreenString("     created"))
+	println(color.GreenString("      created"))
 }
