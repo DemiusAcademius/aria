@@ -1,6 +1,6 @@
-tier: ui
+tier: api
 ns: billing
-name: contracts-interval
+name: android-routes
 kind: deployment
 service:
   listener: acc
