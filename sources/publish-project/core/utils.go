@@ -71,3 +71,12 @@ func FileExists(path string) bool {
 	}
 	return true
 }
+
+// FileExistsAndDir return True if file exists and is Directory
+func FileExistsAndDir(path string) bool {
+	f, err := os.Stat(path)
+	if os.IsNotExist(err) {
+        return false
+	}
+	return f.IsDir()
+}
