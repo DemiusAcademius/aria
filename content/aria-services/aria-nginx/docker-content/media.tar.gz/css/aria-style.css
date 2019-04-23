@@ -268,16 +268,32 @@
   .pointer {
     cursor: pointer;
   }
+  .fab {
+    z-index: 1000;
+    position: fixed;
+  }  
 
-  /* font sized */
+  /* font sizes */
+
   .font-bigger {
-    font-size: 130%;
+    font-size: 120%;
+  }
+  .font-smaller {
+    font-size: 80%;
   }
 
-  .font-smaller {
-    font-size: 75%;
+  /* text align */
+
+  .text-align-center {
+    text-align: center;
   }
-  
+  .text-align-left {
+    text-align: left;
+  }
+  .text-align-right {
+    text-align: right;
+  }
+
   /* text and colors */
   
   .text-white {
