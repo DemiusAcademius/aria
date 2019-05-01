@@ -1,0 +1,6 @@
+tier: ui
+ns: billing
+name: e-payment
+kind: deployment
+service:
+  listener: acc
