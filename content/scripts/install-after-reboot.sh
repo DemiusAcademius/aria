@@ -38,6 +38,9 @@ do
     kubectl create configmap nginx-conf --from-file=assets/nginx/default.conf -n $i
 done
 
+# example of change configmap without restart
+# kubectl create configmap nginx-conf --from-file=assets/nginx/default.conf -n billing -o yaml --dry-run | kubectl replace -f -
+
 # find bearer token for login to dashboard
 echo ""
 echo -e "${RED}COPY DASHBOARD AUTH TOKEN:${NC}"

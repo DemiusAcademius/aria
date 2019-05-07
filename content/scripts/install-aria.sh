@@ -21,10 +21,13 @@ echo ""
 echo -e "${BLUE}Deploy publisher${NC}"
 scripts/deploy-publisher.sh false
 
-# sunc applications
+# sync applications
 echo ""
 echo -e "${BLUE}Sync applications${NC}"
 scripts/sync-applications
+
+# build e-payment base api
+scripts/build-epayment-base.sh
 
 echo ""
 echo -e "${RED}ARIA INSTALLED${NC}"
