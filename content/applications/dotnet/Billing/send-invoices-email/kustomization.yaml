@@ -1,0 +1,4 @@
+ns: billing
+name: send-invoices-email
+kind: cronjob
+schedule: "*/5 * * * *"
