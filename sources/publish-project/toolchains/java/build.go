@@ -93,7 +93,7 @@ func extractVersion(gradlefilePath string) string {
 		line := scanner.Text()
 		if strings.HasPrefix(line,"version") {
 			versionString := strings.Split(line," ")[1]
-			return versionString[1:len(versionString)-2]
+			return versionString[1:len(versionString)-1]
 		}
     }
 
