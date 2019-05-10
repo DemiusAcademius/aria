@@ -1,4 +1,4 @@
 ns: finance
 name: loading-exchange-rates
 kind: cronjob
-schedule: 30 7 * * *
+schedule: 30 5 * * *
