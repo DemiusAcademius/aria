@@ -1,0 +1,4 @@
+ns: billing
+name: verification-client-email
+kind: cronjob
+schedule: "*/10 * * * *"
