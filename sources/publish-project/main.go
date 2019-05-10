@@ -15,6 +15,7 @@ import (
 	"demius/publish-project/api"
 	"demius/publish-project/core"
 	"demius/publish-project/toolchains/dotnet"
+	"demius/publish-project/toolchains/java"
 	"demius/publish-project/toolchains/ui"
 )
 
@@ -81,6 +82,8 @@ func publishProject(config *core.Config, configPath, projectPath, artifactConfig
 		request.DockerContent = dotnet.Build(configPath, projectPath, projectName)
 	case core.WebUIProjectType:
 		request.DockerContent = ui.Build(configPath, projectPath)
+	case core.JavaProjectType:
+		request.DockerContent = java.Build(configPath, projectPath, projectName)
 	default:
 		color.Red("     This project type not yeat realized!")
 		return

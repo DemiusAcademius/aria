@@ -1,4 +1,4 @@
-package ui
+package java
 
 import (
 	"strings"
@@ -22,7 +22,7 @@ type DockerTemplate struct {
 }
 
 // Build Java project with gradle and fill the grpc Request
-func Build(configPath, projectPath string, projectName string) []byte {
+func Build(configPath, projectPath, projectName string) []byte {
 	println()
 	color.Magenta("GRADLE BUILD")
 
