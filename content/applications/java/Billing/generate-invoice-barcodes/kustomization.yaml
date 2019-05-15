@@ -1,4 +1,4 @@
 ns: billing
 name: generate-invoice-barcodes
 kind: cronjob
-schedule: "*/5 * * * *"
+schedule: "* * * * *"
