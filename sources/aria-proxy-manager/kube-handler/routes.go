@@ -16,7 +16,7 @@ const (
 	// NormalDuraion 30 seconds response timeout
 	NormalDuraion = 30 * time.Second
 	// LongDuration 5 minutes response timeout
-	LongDuration = 5 * time.Minute
+	LongDuration = 7 * time.Minute
 	// InfiniteDuration 1 hour response timeout
 	InfiniteDuration = 1 * time.Hour
 )
@@ -56,7 +56,7 @@ func MakeRoutes(services []QualifiedServiceInfo) []env_cache.Resource {
 			if srv.ProxyConfig.Default && config.Redirect != nil {
 				route = makeDefaultRedirect(clusterName, &config)
 				routes[idx][curRoutes[idx]] = route
-				curRoutes[idx]++	
+				curRoutes[idx]++
 			}
 		}
 
@@ -88,7 +88,7 @@ func checkRoute(config *proxyconf.Route) bool {
 			return false
 		}
 	} else {
-		return false;
+		return false
 	}
 	return true
 }
@@ -167,7 +167,7 @@ func calcRoutesCnt(services []QualifiedServiceInfo) []int {
 		if idx > -1 {
 			cnt[idx] += len(srv.ProxyConfig.Routes)
 			if srv.ProxyConfig.Default {
-				cnt[idx] ++
+				cnt[idx]++
 			}
 		}
 	}
