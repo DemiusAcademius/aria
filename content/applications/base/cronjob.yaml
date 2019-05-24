@@ -6,6 +6,7 @@ metadata:
 spec:
   concurrencyPolicy: Forbid
   schedule: "{{ .Schedule }}"
+  startingDeadlineSeconds: 30000
   jobTemplate:    
     spec:
       ttlSecondsAfterFinished: 900
