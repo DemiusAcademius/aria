@@ -1,0 +1,6 @@
+tier: api
+ns: billing
+name: spring-epayment
+kind: deployment
+service:
+  listener: acc

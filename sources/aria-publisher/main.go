@@ -15,7 +15,7 @@ import (
 )
 
 // MaxMessageSize maximum message size of GRPC
-const MaxMessageSize = 1024 * 1024 * 12
+const MaxMessageSize = 1024 * 1024 * 24
 
 func main() {
 	config := publisher.LoadConfiguration()

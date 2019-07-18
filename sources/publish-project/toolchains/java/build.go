@@ -47,12 +47,34 @@ func Build(configPath, projectPath, projectName string) []byte {
 	println()
 	color.Magenta("GENERATE TARBALL")
 
-	dockerfile := generateDockerfile(configPath, projectName, buildVersion)
+	dockerfile, customDockerfileExist := loadCustomDockerfile(projectPath)
+	if !customDockerfileExist {
+		dockerfile = generateDockerfile(configPath, projectName, buildVersion)
+	}
+
 	tarBuffer, err := core.CreateTarball(publishPath, dockerfile)
 	if err != nil {
 		core.PrintErrorAndPanic(err)
 	}
 	return tarBuffer
+}
+
+func loadCustomDockerfile(projectPath string) ([]byte, bool) {
+	dockerfilePath := path.Join(projectPath, "Dockerfile")
+	if core.FileExists(dockerfilePath) {
+		fp, err := os.Open(dockerfilePath)
+		if err != nil {
+			core.PrintErrorAndPanic(fmt.Errorf("can not open source file %s: %v", dockerfilePath, err))
+		}
+		defer fp.Close()
+	
+		dockerfile, err := ioutil.ReadAll(fp)
+		if err != nil {
+			core.PrintErrorAndPanic(fmt.Errorf("can not read Dockerfile %s: %v", dockerfilePath, err))
+		}
+		return dockerfile, true
+	}
+	return nil, false
 }
 
 func generateDockerfile(configPath, projectName, buildVersion string) []byte {

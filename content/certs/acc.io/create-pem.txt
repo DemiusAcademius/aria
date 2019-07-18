@@ -1,0 +1,2 @@
+openssl x509 -inform PEM -in acc.md.crt > acc.md.public.pem
+openssl pkcs8 -topk8 -nocrypt -in acc.md.key > acc.md.private.pem
