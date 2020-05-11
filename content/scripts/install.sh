@@ -3,6 +3,7 @@
 BLUE='\033[1;36m'
 RED='\033[1;31m'
 NC='\033[0m' # No Color
+ADMIN_USER_HOME=/home/acc-server-admin
 
 echo -e "${BLUE}INSTALL KUBERNETES SINGLE-NODE${NC}"
 echo ""
@@ -46,37 +47,59 @@ apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
 # preparing
+
+cat <<EOF > /etc/sysctl.d/99-kubernetes-cri.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward=1
+net.ipv4.conf.all.rp_filter=1
+net.netfilter.nf_conntrack_max = 1000000
+EOF
+sysctl --system
+
 systemctl daemon-reload
 systemctl restart kubelet
-sysctl net.bridge.bridge-nf-call-iptables=1
-sysctl net.ipv4.ip_forward=1
+
+# Prevent NetworkManager from interfering with the interfaces:
+cat <<EOF > /etc/NetworkManager/conf.d/calico.conf
+[keyfile]
+unmanaged-devices=interface-name:cali*;interface-name:tunl*
+EOF
+systemctl restart NetworkManager  > /dev/null 2>&1
 
 # run installation
 echo ""
 echo -e "${BLUE}INSTALL KUBERNETES${NC}"
-kubeadm init --pod-network-cidr=10.244.0.0/16
+kubeadm init --pod-network-cidr=192.168.0.0/16
 
 echo -e "${RED}  COPY AND SAVE THE ABOVE!${NC}"
 echo ""
 
 # post install
+# for admin user
+mkdir -p $ADMIN_USER_HOME/.kube
+cp -i /etc/kubernetes/admin.conf $ADMIN_USER_HOME/.kube/config
+chown -R acc-server-admin:acc-server-admin $ADMIN_USER_HOME/.kube/config
+
+# for root
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-chown -R acc-server-admin:acc-server-admin $HOME/.kube/config
 
 # setup resolv.conf in pods
-cp assets/resolv.conf /etc/kubernetes/resolv.conf
-sed -i 's:/run/systemd/resolve/resolv.conf:/etc/kubernetes/resolv.conf:g' /var/lib/kubelet/kubeadm-flags.env
+# cp assets/resolv.conf /etc/kubernetes/resolv.conf
+# sed -i 's:/run/systemd/resolve/resolv.conf:/etc/kubernetes/resolv.conf:g' /var/lib/kubelet/kubeadm-flags.env
+
 systemctl restart kubelet
+sleep 2s
 
 # tuning core-dns config
-kubectl delete cm coredns -n kube-system
-kubectl create -f manifests/dns-config.yaml
-kubectl delete pod -l k8s-app=kube-dns -n kube-system
+# kubectl delete cm coredns -n kube-system
+# kubectl create -f manifests/dns-config.yaml
+# kubectl delete pod -l k8s-app=kube-dns -n kube-system
 
-# install pod network addon (flannel)
+# install pod network addon (Calico)
 # see: https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
 
 echo -e "${RED}OK${NC}"
 echo -e "${RED}SYSTEM WILL REBOOT NOW${NC}"
