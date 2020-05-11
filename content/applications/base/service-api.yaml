@@ -9,7 +9,7 @@ metadata:
       default: false
       routes:
       - match: { prefix: "/api/{{ .Ns }}/{{ .Name }}/"}
-        route: { prefix_rewrite: "/api/", timeout: long }
+        route: { prefix_rewrite: "/api/", timeout: extra }
 spec:
   selector:
     aria-app: {{ .Name }}.api

@@ -23,7 +23,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: aria-proxy-service
-        image: 10.10.112.27:5000/aria-proxy-service:0.1.6
+        image: 10.10.112.27:5000/aria-proxy-service:0.1.7
         ports:
         - { name: http, containerPort: 80, hostPort: 80 }
         - { name: acc-https, containerPort: 443, hostPort: 443 }
@@ -34,7 +34,7 @@ spec:
         volumeMounts:
         - { name: certs, mountPath: /certs }
       - name: aria-proxy-manager
-        image: 10.10.112.27:5000/aria-proxy-manager:0.1.6
+        image: 10.10.112.27:5000/aria-proxy-manager:0.1.7
         imagePullPolicy: IfNotPresent
       dnsPolicy: Default
       volumes:

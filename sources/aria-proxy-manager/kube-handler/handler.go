@@ -212,7 +212,7 @@ func (handler *KubeHandler) MakeQualifiedSrvInfos() []QualifiedServiceInfo {
 			endpoints := make([]EndpointInfo, 0, len(srv.Endpoints))
 			for _, e := range srv.Endpoints {
 				endpoints = append(endpoints, e)
-			}
+			}	
 
 			clusters[i] =
 				QualifiedServiceInfo{

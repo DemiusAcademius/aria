@@ -16,7 +16,7 @@ Param | Value  | Comments
 ## Linux Installer parameters
 
 Param | Value
-------|-------
+------|-------    
 **Subnet**         | 10.10.0.0/16
 **Server Address** | 10.10.112.27
 **Gateway**        | 10.10.0.254
@@ -70,3 +70,36 @@ Param | Value
     sudo scripts/install-aria.sh
 
 ## Generate UUID on linux: uuidgen!
+
+## LXD .yaml init
+
+config: {}
+networks:
+- config:
+    ipv4.address: auto
+    ipv6.address: none
+  description: ""
+  managed: false
+  name: lxdbr0
+  type: ""
+storage_pools:
+- config:
+    source: /dev/sdb
+  description: ""
+  name: lxd
+  driver: zfs
+profiles:
+- config: {}
+  description: ""
+  devices:
+    eth0:
+      name: eth0
+      nictype: bridged
+      parent: lxdbr0
+      type: nic
+    root:
+      path: /
+      pool: lxd
+      type: disk
+  name: default
+cluster: null

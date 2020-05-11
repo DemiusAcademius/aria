@@ -49,6 +49,7 @@ apt-mark hold kubelet kubeadm kubectl
 systemctl daemon-reload
 systemctl restart kubelet
 sysctl net.bridge.bridge-nf-call-iptables=1
+sysctl net.ipv4.ip_forward=1
 
 # run installation
 echo ""

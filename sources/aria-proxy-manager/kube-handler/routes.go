@@ -11,12 +11,14 @@ import (
 )
 
 const (
-	// ShortDuration 10 seconds response timeout
-	ShortDuration = 10 * time.Second
-	// NormalDuraion 30 seconds response timeout
-	NormalDuraion = 30 * time.Second
-	// LongDuration 5 minutes response timeout
-	LongDuration = 7 * time.Minute
+	// ShortDuration 20 seconds response timeout
+	ShortDuration = 20 * time.Second
+	// NormalDuraion 60 seconds response timeout
+	NormalDuraion = 60 * time.Second
+	// LongDuration 15 minutes response timeout
+	LongDuration = 15 * time.Minute
+	// ExtraLongDuration 30 minutes response timeout
+	ExtraLongDuration = 30 * time.Minute
 	// InfiniteDuration 1 hour response timeout
 	InfiniteDuration = 1 * time.Hour
 )
@@ -215,6 +217,8 @@ func calcDuration(timeout string) time.Duration {
 		return NormalDuraion
 	case "long":
 		return LongDuration
+	case "extra":
+		return ExtraLongDuration
 	case "infinite":
 		return InfiniteDuration
 	}
