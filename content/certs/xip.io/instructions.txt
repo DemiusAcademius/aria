@@ -1,5 +1,0 @@
-http://xip.io/
-https://github.com/bsstokes/xip.io-cert
-
-openssl pkcs12 -export -out domain.name.pfx -inkey domain.name.key -in domain.name.crt
-openssl pkcs12 -export -out xip.io.pfx -inkey xip.io.key -in xip.io.crt

@@ -3,5 +3,5 @@ servers:
   aria-server:
     uri: 10.10.112.27
     user: acc-server-admin
-    password: shwsa3nn
+    password: mysupersecretpassword
     description: applications server based on Kubernetes
