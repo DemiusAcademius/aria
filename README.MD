@@ -9,7 +9,7 @@
 
     Sources folder contains utilities and scripts written in GO
 
-    
+
 
 ## Common parameters
 
@@ -39,8 +39,8 @@ Param | Value
 ------|------
 **Your name**   | Demius Academius
 **Server name** | aria-server
-**Username**    | acc-server-admin
-**Password**    | shwsa3nn
+**Username**    | my username
+**Password**    | my password
 
 ## Install K8S
 
