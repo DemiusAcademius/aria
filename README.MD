@@ -4,6 +4,13 @@
 
 ## demo of real configuration ##
 
+    Content folder contains configs and scripts
+
+
+    Sources folder contains utilities and scripts written in GO
+
+    
+
 ## Common parameters
 
 Param | Value  | Comments
