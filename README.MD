@@ -2,6 +2,8 @@
 
 [see official docs](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)
 
+## demo of real configuration ##
+
 ## Common parameters
 
 Param | Value  | Comments
